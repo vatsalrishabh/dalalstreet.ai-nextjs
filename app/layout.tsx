@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        data-theme="coffee" // theme of website 
+        data-theme="dark" // theme of website 
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
   <ReduxProvider>

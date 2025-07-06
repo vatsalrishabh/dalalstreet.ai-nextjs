@@ -11,7 +11,7 @@ const ChatPage = () => {
     {
       id: '1',
       sender: 'bot',
-      content: 'Welcome to DalalStreet AI! Ask me anything about stocks 📊',
+      content: 'Welcome to DalalStreet AI! Ask me anything about stocks ',
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -35,7 +35,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-base-100 shadow-lg rounded-lg overflow-hidden">
+    <div className="h-full pb-5 flex flex-col bg-base-100 shadow-lg rounded-lg overflow-hidden">
       <ChatHeader />
       <div className="flex-1 p-4 overflow-y-auto space-y-3">
         {messages.map((msg) => (

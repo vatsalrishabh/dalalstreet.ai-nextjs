@@ -13,21 +13,22 @@ const formatNumber = (num: number) => Number(num.toFixed(2));
 
 const StockTable: React.FC<Props> = ({ title, count }) => {
   return (
-    <div>
+    <div className="bg-base-100 p-4 rounded-xl shadow-lg text-base-content">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">{title || '📈 Stock Table'}</h2>
+        <h2 className="text-2xl font-bold">{title || ' Stock Table'}</h2>
         {count && (
-          <span className="badge badge-info badge-lg">
-            {count} Stocks
-          </span>
+        <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
+ {count} Stocks
+</span>
+
         )}
       </div>
 
-<div className="overflow-x-auto rounded-xl shadow-md custom-scrollbar">
-  <table className="table table-zebra table-sm bg-base-100 text-sm">
-          <thead className="bg-base-200 text-base font-medium">
+      <div className="overflow-x-auto rounded-xl custom-scrollbar border border-base-300">
+        <table className="table table-zebra table-sm bg-base-100 text-sm">
+          <thead className="bg-base-200 text-base font-semibold text-base-content">
             <tr>
-              <th>#</th>
+              <th></th>
               <th>Name</th>
               <th>CMP ₹</th>
               <th>P/E</th>
@@ -44,45 +45,41 @@ const StockTable: React.FC<Props> = ({ title, count }) => {
           </thead>
           <tbody>
             {dummyStocks.map((stock: StockData) => (
-              <tr key={stock.id} className="hover">
+              <tr key={stock.id} className="hover:bg-base-300/20 transition-colors">
                 <td className="font-bold">{stock.id}</td>
                 <td className="text-primary">{stock.name}</td>
                 <td>₹{formatNumber(stock.cmp)}</td>
                 <td>{formatNumber(stock.pe)}</td>
                 <td>{formatNumber(stock.marketCap)}</td>
-                <td>
-                  <span className="badge badge-ghost">
-                    {formatNumber(stock.dividendYield)}%
-                  </span>
-                </td>
+                <td>{formatNumber(stock.dividendYield)}%</td>
                 <td>₹{formatNumber(stock.npQuarter)}</td>
-                <td>
-                  <span
-                    className={`badge ${
-                      stock.profitVar > 0
-                        ? 'badge-success'
-                        : stock.profitVar < 0
-                        ? 'badge-error'
-                        : 'badge-neutral'
-                    }`}
-                  >
-                    {formatNumber(stock.profitVar)}%
-                  </span>
+
+                <td
+                  className={
+                    stock.profitVar > 0
+                      ? 'text-success'
+                      : stock.profitVar < 0
+                      ? 'text-error'
+                      : ''
+                  }
+                >
+                  {formatNumber(stock.profitVar)}%
                 </td>
+
                 <td>₹{formatNumber(stock.salesQuarter)}</td>
-                <td>
-                  <span
-                    className={`badge ${
-                      stock.salesVar > 0
-                        ? 'badge-success'
-                        : stock.salesVar < 0
-                        ? 'badge-error'
-                        : 'badge-neutral'
-                    }`}
-                  >
-                    {formatNumber(stock.salesVar)}%
-                  </span>
+
+                <td
+                  className={
+                    stock.salesVar > 0
+                      ? 'text-success'
+                      : stock.salesVar < 0
+                      ? 'text-error'
+                      : ''
+                  }
+                >
+                  {formatNumber(stock.salesVar)}%
                 </td>
+
                 <td>{formatNumber(stock.roce)}%</td>
                 <td>{formatNumber(stock.industryPE)}</td>
                 <td>{formatNumber(stock.cmpBV)}</td>

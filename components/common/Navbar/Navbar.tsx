@@ -3,81 +3,117 @@
 import Link from 'next/link';
 import React from 'react';
 import SignupModal from '../Signup/SignupModal';
+import Logo from '@/components/logo/Logo';
 
 const Navbar: React.FC = () => {
   return (
-    <div className="navbar bg-base-100 shadow-sm px-4 md:px-8">
+    <nav className="navbar bg-base-100 shadow-md px-4 md:px-8 sticky top-0 z-50">
       {/* Left - Logo */}
       <div className="flex-1">
-        <Link href="/" className="text-xl font-bold text-primary">
-         DalalStreet.ai
+        <Link href="/" className="flex items-center gap-2 text-lg md:text-xl font-semibold text-primary">
+          <Logo />
+          <span className="hidden sm:inline-block tracking-tight">DalalStreet AI</span>
         </Link>
       </div>
 
-      {/* Middle - Nav Menu (desktop only) */}
-      <div className="hidden lg:flex gap-2 items-center">
-        <Link href="/" className="btn btn-ghost btn-sm rounded-btn">Home</Link>
-        <Link href="/screens" className="btn btn-ghost btn-sm rounded-btn">Screens</Link>
-        <Link href="/tools" className="btn btn-ghost btn-sm rounded-btn">Tools</Link>
+      {/* Middle - Nav Menu */}
+      <div className="hidden lg:flex items-center gap-3">
+        {/* Main Links */}
+        <Link href="/" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Home</Link>
+        <Link href="/screens" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Screens</Link>
+        <Link href="/tools" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Tools</Link>
 
-        {/* Dropdown: Create a stock screen */}
+        {/* Group: Create Stock Screen */}
         <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn">
-            Create a stock screen
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">
+            Create Screen
           </div>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64 z-50">
+          <ul className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-72">
             <li>
-              <Link href="/queries">Run queries on 10 years of financial data</Link>
+              <Link href="/queries">
+                <div>
+                  <span className="font-medium text-base">📊 Run Queries</span>
+                  <p className="text-sm text-base-content/60">
+                    Explore 10 years of financials
+                  </p>
+                </div>
+              </Link>
             </li>
             <li>
-              <Link href="/premium">Premium features</Link>
+              <Link href="/premium">
+                <div>
+                  <span className="font-medium text-base">💎 Premium Features</span>
+                  <p className="text-sm text-base-content/60">
+                    Screeners, alerts & exports
+                  </p>
+                </div>
+              </Link>
             </li>
           </ul>
         </div>
 
-        {/* Dropdown: Commodity Prices */}
+        {/* Group: Commodity Prices */}
         <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn">
-            Commodity Prices
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">
+            Commodities
           </div>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64 z-50">
+          <ul className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-72">
             <li>
-              <Link href="/commodities">Analyze price trends for 10,000+ commodities</Link>
+              <Link href="/commodities">
+                <div>
+                  <span className="font-medium text-base">📈 Price Trends</span>
+                  <p className="text-sm text-base-content/60">
+                    10,000+ commodities data
+                  </p>
+                </div>
+              </Link>
             </li>
           </ul>
         </div>
 
-        {/* Dropdown: Shareholders */}
+        {/* Group: Shareholders */}
         <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn">
-            Search shareholders
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">
+            Shareholders
           </div>
-          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-64 z-50">
+          <ul className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-72">
             <li>
-              <Link href="/shareholders">Find all companies where a person owns more than 1%</Link>
+              <Link href="/shareholders">
+                <div>
+                  <span className="font-medium text-base">🔍 Ownership Search</span>
+                  <p className="text-sm text-base-content/60">
+                    Find people holding {`>`}1%
+                  </p>
+                </div>
+              </Link>
             </li>
           </ul>
         </div>
 
-        <Link href="/announcements" className="btn btn-ghost btn-sm rounded-btn">
-          Company Announcements
+        {/* Company Announcements */}
+        <Link href="/announcements" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">
+          Announcements
         </Link>
       </div>
 
-      {/* Right - Auth / CTA */}
-      <div className="flex-none gap-2">
-        <Link href="/premium" className="btn btn-outline btn-sm hidden md:inline-flex">
-          Upgrade to Premium
+      {/* Right - Actions */}
+      <div className="flex items-center gap-2">
+        <Link
+          href="/premium"
+          className="btn btn-sm btn-outline btn-accent hidden md:inline-flex"
+        >
+          🚀 Upgrade
         </Link>
-        <Link href="/login" className="btn btn-ghost btn-sm">
+        <Link
+          href="/login"
+          className="btn btn-sm btn-ghost text-base-content hover:text-primary"
+        >
           Login
         </Link>
-        <Link href="/register" className="btn btn-primary btn-sm">
-          Get free account
-        </Link>
       </div>
-      <SignupModal/>
-    </div>
+
+      <SignupModal />
+    </nav>
   );
 };
 

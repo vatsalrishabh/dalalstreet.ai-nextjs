@@ -1,13 +1,62 @@
+/* global.css */
 @import "tailwindcss";
-@plugin "daisyui" {
-   themes: all;
- }
+@plugin "daisyui"{
+  themes:all;
+}
 
+@plugin "daisyui/theme" {
+  name: "mytheme";
+  default: true; /* set as default */
+  prefersdark: false; /* set as default dark mode (prefers-color-scheme:dark) */
+  color-scheme: light; /* color of browser-provided UI */
 
-/* Custom Scrollbar */
-/* globals.css */
+/* Tailwind / DaisyUI theme with custom greyscale palette */
+  /* DARK BACKGROUND COLORS */
+  --color-base-100: #000000;       /* pure black */
+  --color-base-200: #292929;       /* dark grey */
+  --color-base-300: #676767;       /* mid grey */
 
+  /* TEXT / FOREGROUND COLORS */
+  --color-base-content: #F5F7FF;   /* almost white - high contrast text */
 
+  /* BRAND COLORS BASED ON GREY PALETTE */
+  --color-primary: #96A7B0;        /* Everest Blue-Grey */
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #B5B1B1;      /* Grey Hair muted tone */
+  --color-secondary-content: #000000;
+
+  --color-accent: #DEEEFA;         /* Everest blue tint for highlights */
+  --color-accent-content: #000000;
+
+  --color-neutral: #858280;        /* Grey Hair base */
+  --color-neutral-content: #F5F7FF;
+
+  --color-info: #A8A8A8;           /* Atomic mid grey */
+  --color-info-content: #ffffff;
+
+  --color-success: #A8A7AC;        /* from Neutral Greys */
+  --color-success-content: #000000;
+
+  --color-warning: #BABABA;        /* Pastel Grey Gradient */
+  --color-warning-content: #000000;
+
+  --color-error: #C3C5C9;          /* Everest Grey soft */
+  --color-error-content: #000000;
+
+  /* BORDER & EFFECTS */
+  --radius-selector: 1rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+
+}
 
 /* Optional: Firefox support */
 .custom-scrollbar {
@@ -15,3 +64,6 @@
 
 }
 
+*{
+   scrollbar-width: none;
+}
