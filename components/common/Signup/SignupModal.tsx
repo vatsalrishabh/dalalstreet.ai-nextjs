@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { initiateGoogleOAuth } from '@/services/authService';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import '@/firebase/config'; // 
@@ -22,7 +23,7 @@ const SignupModal: React.FC = () => {
       const results = await initiateGoogleOAuth(token); // call the fastapi backend to receive the users credentials 
       console.log(result)
        console.log("printing useDetails")
-      console.log(results)
+      console.log(results.data)
      
     } catch (err) {
       console.error('Login error:', err);
@@ -74,7 +75,7 @@ const SignupModal: React.FC = () => {
               disabled={loading}
               className="w-full flex items-center justify-center gap-4 py-3 px-5 text-lg font-medium border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
             >
-              <img
+              <Image
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
                 alt="Google logo"
                 className="w-6 h-6"
