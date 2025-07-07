@@ -1,24 +1,27 @@
-"use client";
+'use client';
 
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useRef, useState } from "react";
+import {
+  Panel,
+  PanelGroup,
+  PanelResizeHandle,
+  ImperativePanelHandle,
+} from 'react-resizable-panels';
+import { useRef, useState } from 'react';
 
-import StockTable from "@/components/laptop/StockTable";
-import ChatPage from "@/components/laptop/ChatPage";
-import Navbar from "@/components/common/Navbar/Navbar";
+import StockTable from '@/components/laptop/StockTable';
+import ChatPage from '@/components/laptop/ChatPage';
+import Navbar from '@/components/common/Navbar/Navbar';
+import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
+import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 
-import { dummyStocks } from "@/data/stocks.data";
-import LeftBadgeOne from "@/components/common/Drawer/LeftBadgeOne";
-import LeftBadgeTwo from "@/components/common/Drawer/LeftBadgeTwo";
+import { dummyStocks } from '@/data/stocks.data';
 
-import {  useSelector } from "react-redux";
-import type { RootState } from "@/store/redux/store";
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/store/redux/store';
 
 export default function Dashboard() {
-const theme = useSelector((state:RootState) => state.theme.mode);
-// const dispatch = useDispatch();
-
-  const rightPanelRef = useRef<any>(null);
+  const theme = useSelector((state: RootState) => state.theme.mode);
+  const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
 
   const toggleChatPanel = () => {
@@ -28,11 +31,8 @@ const theme = useSelector((state:RootState) => state.theme.mode);
     }
   };
 
-
-
   return (
-    <div data-theme={theme}  className="Main-all-App">   {/* <-----Tailwind UI theme is being rendered here */}
-   
+    <div data-theme={theme} className="Main-all-App">
       <Navbar />
       <LeftBadgeOne />
       <LeftBadgeTwo />
@@ -57,8 +57,8 @@ const theme = useSelector((state:RootState) => state.theme.mode);
             <div className="flex flex-col justify-center items-center bg-base-200">
               <button
                 onClick={toggleChatPanel}
-                className="p- rounded-full text-base-content hover:text-primary transition-colors"
-                title={chatOpen ? "Hide Chat" : "Show Chat"}
+                className="p-2 rounded-full text-base-content hover:text-primary transition-colors"
+                title={chatOpen ? 'Hide Chat' : 'Show Chat'}
               >
                 {chatOpen ? (
                   <svg
