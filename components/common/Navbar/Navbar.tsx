@@ -104,12 +104,6 @@ const Navbar: React.FC = () => {
         >
           🚀 Upgrade
         </Link>
-        <Link
-          href="/login"
-          className="btn btn-sm btn-ghost text-base-content hover:text-primary"
-        >
-          Login
-        </Link>
       </div>
 
       <SignupModal />
