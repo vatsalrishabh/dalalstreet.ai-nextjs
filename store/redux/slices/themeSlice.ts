@@ -6,13 +6,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type ThemeType =
   | 'light'
   | 'dark'
+  | 'blue'
   | 'corporate'
   | 'synthwave'
   | 'forest'
   | 'luxury'
   | 'dracula'
   | 'maroon'
-  | 'custom-ameesh';
+  | 'custom-ameesh'; // auto suggested theme types
 
 interface ThemeState {
   mode: ThemeType;
