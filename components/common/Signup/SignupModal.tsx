@@ -17,11 +17,11 @@ const SignupModal: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
       const token = await firebaseUser.getIdToken();
-       console.log("printing token")
-      console.log(token)
+      //  console.log("printing token")
+      // console.log(token)
       const results = await initiateGoogleOAuth(token); // call the fastapi backend to receive the users credentials 
       console.log(result)
-       console.log("printing token")
+       console.log("printing useDetails")
       console.log(results)
      
     } catch (err) {
