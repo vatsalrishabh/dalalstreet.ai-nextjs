@@ -3,12 +3,12 @@ import api from "@/lib/api"; // the custom api which we made
 
 
 
-// @hit- /api/v1/login        {Content-Type}
+// @hit- /api/v1/auth/login        {Content-Type}
 //method - 
 //access - users
 export const initiateGoogleOAuth = (firebaseIdToken: string) => {
   return api.post(
-   `${process.env.NEXT_PUBLIC_Base_URL}/api/v1/login`,
+   `${process.env.NEXT_PUBLIC_Base_URL}/api/v1/auth/login`,
     {}, // no body needed, unless your backend expects it
     {
       headers: {

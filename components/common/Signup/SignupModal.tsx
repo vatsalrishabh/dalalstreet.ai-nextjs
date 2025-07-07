@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { initiateGoogleOAuth } from '@/services/authService';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import '@/firebase/config'; // 👈 Required Firebase initialization
+import '@/firebase/config'; // 
 
 const SignupModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,7 @@ const SignupModal: React.FC = () => {
       console.log(result)
        console.log("printing token")
       console.log(results)
-      window.location.href = '/dashboard';
+     
     } catch (err) {
       console.error('Login error:', err);
       alert('Login failed. Try again.');
