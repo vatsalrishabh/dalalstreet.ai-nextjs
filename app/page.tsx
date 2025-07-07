@@ -11,12 +11,12 @@ import { dummyStocks } from "@/data/stocks.data";
 import LeftBadgeOne from "@/components/common/Drawer/LeftBadgeOne";
 import LeftBadgeTwo from "@/components/common/Drawer/LeftBadgeTwo";
 
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import type { RootState } from "@/store/redux/store";
 
 export default function Dashboard() {
 const theme = useSelector((state:RootState) => state.theme.mode);
-const dispatch = useDispatch();
+// const dispatch = useDispatch();
 
   const rightPanelRef = useRef<any>(null);
   const [chatOpen, setChatOpen] = useState(true);
