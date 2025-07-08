@@ -13,6 +13,7 @@ import {
   clearAuthFromLocalStorage,
 } from '@/middleware/localStorage/authMiddleware';
 import '@/firebase/config';
+import { BackendUser } from '@/types/auth';
 
 // Optional: Icons
 import { LogOut, User, Mail, Coins } from 'lucide-react';
@@ -20,7 +21,7 @@ import { LogOut, User, Mail, Coins } from 'lucide-react';
 const SignupModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userDetails, setUserDetails] = useState<any | null>(null);
+  const [userDetails, setUserDetails] = useState<{ user: BackendUser; token: string } | null>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
