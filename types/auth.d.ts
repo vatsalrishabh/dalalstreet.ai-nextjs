@@ -4,4 +4,6 @@ export interface BackendUser {
   email: string;
   phone_number: string | null;
   credits: number;
+   userName: string;
+  userDpUrl: string;
 }

@@ -6,6 +6,8 @@ import SignupModal from '../Signup/SignupModal';
 import Logo from '@/components/logo/Logo';
 
 const Navbar: React.FC = () => {
+
+
   return (
     <nav className="navbar bg-base-100 shadow-md px-4 md:px-8 sticky top-0 z-50">
       {/* Left - Logo */}

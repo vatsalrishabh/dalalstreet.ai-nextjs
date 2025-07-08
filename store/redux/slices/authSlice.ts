@@ -6,13 +6,14 @@ interface AuthState {
   user: BackendUser | null;
   token: string | null;
   isAuthenticated: boolean;
+
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
   isAuthenticated: false,
-};
+}; // in the begining it will be like this user will have uid,name,dpUrl,credits etc
 
 const authSlice = createSlice({
   name: 'auth',

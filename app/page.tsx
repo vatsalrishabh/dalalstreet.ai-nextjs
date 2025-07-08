@@ -101,7 +101,8 @@ export default function Dashboard() {
 
             {/* Right Panel */}
             <Panel ref={rightPanelRef} defaultSize={30} minSize={0}>
-              <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4">
+            
+              <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4 sm:hidden">
                 <h2 className="text-xl font-semibold mb-4 text-base-content">
                   💬 Chat Assistant
                 </h2>
