@@ -39,7 +39,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
             if (parsed.action_type === 'llm_response' && parsed.message) {
               const msgParts = parsed.message
                 .split(/\n{2,}|\n(?=\d+\.)/)
-                .map((m:String) => m.trim())
+                .map((m:string) => m.trim())
                 .filter(Boolean);
               chunks.push(...msgParts);
             }
