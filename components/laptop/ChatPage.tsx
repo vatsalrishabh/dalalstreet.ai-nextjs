@@ -39,11 +39,12 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
             if (parsed.action_type === 'llm_response' && parsed.message) {
               const msgParts = parsed.message
                 .split(/\n{2,}|\n(?=\d+\.)/)
-                .map((m:any) => m.trim())
+                .map((m:String) => m.trim())
                 .filter(Boolean);
               chunks.push(...msgParts);
             }
-          } catch (e) {
+          } catch (_) {
+           
             console.warn('❌ Failed to parse JSON:', line);
           }
         }
@@ -53,7 +54,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
         await new Promise((res) => setTimeout(res, 500));
         setMessages((prev) => [...prev, { sender: 'ai', content: chunks[i] }]);
       }
-    } catch (err) {
+    } catch (_) {
       setMessages((prev) => [
         ...prev,
         { sender: 'ai', content: '❌ AI failed to respond.' },
