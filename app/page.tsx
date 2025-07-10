@@ -1,125 +1,127 @@
-'use client';
+"use client";
+// pages/index.jsx
+import { useState, useRef } from 'react';
 
-import {
-  Panel,
-  PanelGroup,
-  PanelResizeHandle,
-  ImperativePanelHandle,
-} from 'react-resizable-panels';
-import { useRef, useState } from 'react';
+export default function Home() {
+  const [query, setQuery] = useState('');
+  const screenerRef = useRef<HTMLDivElement | null>(null)
 
-
-import StockTable from '@/components/laptop/StockTable';
-import ChatPage from '@/components/laptop/ChatPage';
-import Navbar from '@/components/common/Navbar/Navbar';
-import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
-import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
-
-// import { dummyStocks } from '@/data/stocks.data';
-
-import { useSelector } from 'react-redux';
-import type { RootState } from '@/store/redux/store';
-
-export default function Dashboard() {
-  const theme = useSelector((state: RootState) => state.theme.mode);
-  const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
-  const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
-  const [chatOpen, setChatOpen] = useState(true);
-
-  const toggleChatPanel = () => {
-    if (rightPanelRef.current) {
-      rightPanelRef.current.resize(chatOpen ? 0 : 30);
-      setChatOpen(!chatOpen);
+  const handleSample = (text: string) => {
+    setQuery(text);
+    screenerRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  const startScreening = () => {
+    if (screenerRef.current) {
+      screenerRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
-console.log(firebaseIdToken)
+
   return (
-    <div data-theme={theme} className="Main-all-App">
-      <Navbar />
-      <LeftBadgeOne />
-      <LeftBadgeTwo />
+    <div className="min-h-screen bg-[#F5F5EE] text-gray-900 relative">
+      {/* Nav */}
+      <nav className="absolute top-0 left-0 w-full p-6 flex justify-end space-x-8">
+        <a href="#features" className="hover:text-orange-600">Features</a>
+        <a href="#pricing" className="hover:text-orange-600">Pricing</a>
+        <a href="#login" className="hover:text-orange-600">Login</a>
+      </nav>
 
-      <div className="h-screen w-screen overflow-hidden bg-base-100 text-base-content">
-        <main className="h-full w-full">
-          <PanelGroup direction="horizontal" className="h-full w-full">
-            {/* Left Panel */}
-            <Panel defaultSize={70} minSize={20}>
-              <div className="h-full bg-base-200 border-r border-base-300 rounded-l-xl shadow-inner p-4">
-                <h2 className="text-xl font-semibold mb-4 text-base-content">
-                  Stock Table
-                </h2>
-               {firebaseIdToken && (
-  <StockTable
-    title="Top Performing Stocks"
-    firebaseIdToken={firebaseIdToken}
-    count={20}
-  />
-)}
-
-              </div>
-            </Panel>
-
-            {/* Toggle Icon Centered */}
-            <div className="flex flex-col justify-center items-center bg-base-200">
+      {/* Hero / Chat Section */}
+      <div className="flex flex-col items-center justify-center h-screen px-6 relative z-10">
+        <h1 className="text-5xl font-extrabold text-center mb-4 leading-tight">
+          Find the right stocks<br />by just having a conversation
+        </h1>
+        <p className="text-center text-gray-600 mb-6">
+          Describe what you need or pick an example to get instant insights.
+        </p>
+        {/* Input + Samples + CTA */}
+        <div className="space-y-4 w-full max-w-lg">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="e.g. 'High dividend yield telecom stocks'"
+            className="w-full px-5 py-3 bg-white border border-gray-300 rounded-full 
+                       focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition"
+          />
+          {/* Sample prompts */}
+          <div className="flex flex-wrap gap-3">
+            {[
+              'Screen tech stocks last 6 months',
+              'Find low P/E value stocks',
+            ].map((txt) => (
               <button
-                onClick={toggleChatPanel}
-                className="p-2 rounded-full text-base-content hover:text-primary transition-colors"
-                title={chatOpen ? 'Hide Chat' : 'Show Chat'}
+                key={txt}
+                onClick={() => handleSample(txt)}
+                className="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-medium 
+                           hover:bg-orange-200 transition"
               >
-                {chatOpen ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                )}
+                {txt}
               </button>
-            </div>
+            ))}
+          </div>
+          {/* Start Screening CTA */}
+          <button
+            onClick={startScreening}
+            className="w-full py-3 mt-4 bg-orange-600 text-white rounded-full font-semibold 
+                       shadow-md hover:bg-orange-700 transition"
+          >
+            Start Screening
+          </button>
+        </div>
+      </div>
 
-            {/* Resize Handle */}
-            <PanelResizeHandle>
-              <div className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-col-resize" />
-            </PanelResizeHandle>
+      {/* Screener Section */}
+      <div
+        ref={screenerRef}
+        className="min-h-screen px-8 py-12 bg-white"
+      >
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Stock Screener
+        </h2>
 
-            {/* Right Panel */}
-           {/* Right Panel */}
-<Panel ref={rightPanelRef} defaultSize={30} minSize={0}>
-  <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4">
-    <h2 className="text-xl font-semibold mb-4 text-base-content">
-      💬 Chat Assistant
-    </h2>
-    {firebaseIdToken && (
-      <ChatPage firebaseIdToken={firebaseIdToken} />
-    )}
-  </div>
-</Panel>
+        {/* Filter controls */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {['Sector', 'Market Cap', 'P/E Ratio'].map((label) => (
+            <select
+              key={label}
+              className="p-3 bg-white border border-gray-300 rounded-xl text-gray-800 
+                         focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition"
+              aria-label={label}
+            >
+              <option className="bg-white">{label}</option>
+              {/* …options */}
+            </select>
+          ))}
+        </div>
 
-          </PanelGroup>
-        </main>
+        {/* Sample results table */}
+        <div className="max-w-4xl mx-auto overflow-x-auto rounded-2xl bg-gray-50 shadow-md">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-gray-200">
+                {['Ticker', 'Company', 'P/E', 'Market Cap'].map((h) => (
+                  <th key={h} className="py-3 px-4 text-gray-700">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { t: 'AAPL', c: 'Apple Inc.', pe: 28.5, m: '$2.3T' },
+                { t: 'MSFT', c: 'Microsoft Corp.', pe: 34.2, m: '$2.1T' },
+              ].map(({ t, c, pe, m }) => (
+                <tr
+                  key={t}
+                  className="border-b border-gray-200 hover:bg-gray-100 transition"
+                >
+                  <td className="py-3 px-4 font-medium">{t}</td>
+                  <td className="px-4">{c}</td>
+                  <td className="px-4">{pe}</td>
+                  <td className="px-4">{m}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
