@@ -43,8 +43,8 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
                 .filter(Boolean);
               chunks.push(...msgParts);
             }
-          } catch (_) {
-           
+          } catch (e) {
+            console.log(e)
             console.warn('❌ Failed to parse JSON:', line);
           }
         }
@@ -54,7 +54,8 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
         await new Promise((res) => setTimeout(res, 500));
         setMessages((prev) => [...prev, { sender: 'ai', content: chunks[i] }]);
       }
-    } catch (_) {
+    } catch (err) {
+      console.log(err)
       setMessages((prev) => [
         ...prev,
         { sender: 'ai', content: '❌ AI failed to respond.' },
