@@ -8,6 +8,7 @@ import {
 } from 'react-resizable-panels';
 import { useRef, useState } from 'react';
 
+
 import StockTable from '@/components/laptop/StockTable';
 import ChatPage from '@/components/laptop/ChatPage';
 import Navbar from '@/components/common/Navbar/Navbar';
@@ -21,6 +22,7 @@ import type { RootState } from '@/store/redux/store';
 
 export default function Dashboard() {
   const theme = useSelector((state: RootState) => state.theme.mode);
+  const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
   const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
 
@@ -30,7 +32,7 @@ export default function Dashboard() {
       setChatOpen(!chatOpen);
     }
   };
-
+console.log(firebaseIdToken)
   return (
     <div data-theme={theme} className="Main-all-App">
       <Navbar />
@@ -46,10 +48,14 @@ export default function Dashboard() {
                 <h2 className="text-xl font-semibold mb-4 text-base-content">
                   Stock Table
                 </h2>
-                <StockTable
-                  title="Top Performing Stocks"
-                  count={dummyStocks.length}
-                />
+               {firebaseIdToken && (
+  <StockTable
+    title="Top Performing Stocks"
+    firebaseIdToken={firebaseIdToken}
+    count={20}
+  />
+)}
+
               </div>
             </Panel>
 
@@ -100,15 +106,18 @@ export default function Dashboard() {
             </PanelResizeHandle>
 
             {/* Right Panel */}
-            <Panel ref={rightPanelRef} defaultSize={30} minSize={0}>
-            
-              <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4 sm:hidden">
-                <h2 className="text-xl font-semibold mb-4 text-base-content">
-                  💬 Chat Assistant
-                </h2>
-                <ChatPage />
-              </div>
-            </Panel>
+           {/* Right Panel */}
+<Panel ref={rightPanelRef} defaultSize={30} minSize={0}>
+  <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4">
+    <h2 className="text-xl font-semibold mb-4 text-base-content">
+      💬 Chat Assistant
+    </h2>
+    {firebaseIdToken && (
+      <ChatPage firebaseIdToken={firebaseIdToken} />
+    )}
+  </div>
+</Panel>
+
           </PanelGroup>
         </main>
       </div>

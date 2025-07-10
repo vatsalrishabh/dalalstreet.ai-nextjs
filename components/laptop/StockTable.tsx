@@ -1,26 +1,48 @@
 'use client';
 
-import React from 'react';
-import { dummyStocks } from '@/data/stocks.data';
-import { StockData } from '@/models/stock.model';
+import React, { useEffect, useState } from 'react';
+import { StockRaw } from '@/models/stock.model';
+import { getStockScreenResults } from '@/services/stockServices';
 
 type Props = {
   title?: string;
   count?: number;
+  firebaseIdToken: string;
 };
 
 const formatNumber = (num: number) => Number(num.toFixed(2));
 
-const StockTable: React.FC<Props> = ({ title, count }) => {
+const StockTable: React.FC<Props> = ({ title = 'Top Stocks', count = 10, firebaseIdToken }) => {
+  const [stocks, setStocks] = useState<StockRaw[]>([]);
+
+  useEffect(() => {
+    const fetchStocks = async () => {
+      try {
+        const result = await getStockScreenResults(firebaseIdToken);
+
+        // Make sure result.data is an array
+        if (!Array.isArray(result?.data)) {
+          console.error("Unexpected API response:", result);
+          return;
+        }
+
+        setStocks(result.data.slice(0, count));
+      } catch (error) {
+        console.error('❌ Failed to fetch stocks:', error);
+      }
+    };
+
+    fetchStocks();
+  }, [firebaseIdToken, count]);
+
   return (
     <div className="bg-base-100 p-4 rounded-xl shadow-lg text-base-content">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">{title || ' Stock Table'}</h2>
         {count && (
-        <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
- {count} Stocks
-</span>
-
+          <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
+            {count} Stocks
+          </span>
         )}
       </div>
 
@@ -44,45 +66,41 @@ const StockTable: React.FC<Props> = ({ title, count }) => {
             </tr>
           </thead>
           <tbody>
-            {dummyStocks.map((stock: StockData) => (
-              <tr key={stock.id} className="hover:bg-base-300/20 transition-colors">
-                <td className="font-bold">{stock.id}</td>
+            {stocks.map((stock, index) => (
+              <tr key={stock.bse_code || index} className="hover:bg-base-300/20 transition-colors">
+                <td className="font-bold">{index + 1}</td>
                 <td className="text-primary">{stock.name}</td>
-                <td>₹{formatNumber(stock.cmp)}</td>
-                <td>{formatNumber(stock.pe)}</td>
-                <td>{formatNumber(stock.marketCap)}</td>
-                <td>{formatNumber(stock.dividendYield)}%</td>
-                <td>₹{formatNumber(stock.npQuarter)}</td>
-
+                <td>₹{formatNumber(stock.current_price)}</td>
+                <td>{formatNumber(stock.price_to_earning)}</td>
+                <td>{formatNumber(stock.market_capitalization)}</td>
+                <td>{formatNumber(stock.dividend_yield)}%</td>
+                <td>₹{formatNumber(stock.net_profit_latest_quarter)}</td>
                 <td
                   className={
-                    stock.profitVar > 0
+                    stock.yoy_quarterly_profit_growth > 0
                       ? 'text-success'
-                      : stock.profitVar < 0
+                      : stock.yoy_quarterly_profit_growth < 0
                       ? 'text-error'
                       : ''
                   }
                 >
-                  {formatNumber(stock.profitVar)}%
+                  {formatNumber(stock.yoy_quarterly_profit_growth)}%
                 </td>
-
-                <td>₹{formatNumber(stock.salesQuarter)}</td>
-
+                <td>₹{formatNumber(stock.sales_latest_quarter)}</td>
                 <td
                   className={
-                    stock.salesVar > 0
+                    stock.yoy_quarterly_sales_growth > 0
                       ? 'text-success'
-                      : stock.salesVar < 0
+                      : stock.yoy_quarterly_sales_growth < 0
                       ? 'text-error'
                       : ''
                   }
                 >
-                  {formatNumber(stock.salesVar)}%
+                  {formatNumber(stock.yoy_quarterly_sales_growth)}%
                 </td>
-
-                <td>{formatNumber(stock.roce)}%</td>
-                <td>{formatNumber(stock.industryPE)}</td>
-                <td>{formatNumber(stock.cmpBV)}</td>
+                <td>{formatNumber(stock.return_on_capital_employed)}%</td>
+                <td>{formatNumber(stock.industry_pe)}</td>
+                <td>{formatNumber(stock.price_to_book_value)}</td>
               </tr>
             ))}
           </tbody>
