@@ -15,7 +15,7 @@ import Navbar from '@/components/common/Navbar/Navbar';
 import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
 import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 
-import { dummyStocks } from '@/data/stocks.data';
+// import { dummyStocks } from '@/data/stocks.data';
 
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
