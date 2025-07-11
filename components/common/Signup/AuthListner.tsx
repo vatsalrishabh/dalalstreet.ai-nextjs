@@ -1,6 +1,6 @@
 "use client"
 import { useEffect } from "react";
-import { getAuth, onIdTokenChanged, signOut } from "firebase/auth";
+import { getAuth, onIdTokenChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logout } from "@/store/redux/slices/authSlice";
 import { clearAuthFromLocalStorage } from "@/middleware/localStorage/authMiddleware";
@@ -18,8 +18,8 @@ export default function AuthListener() {
         clearAuthFromLocalStorage();
         console.warn("🔒 Logged out due to expired or invalid token.");
       } else {
-        const token = await user.getIdToken(); // You can optionally re-store a fresh token
-        // optionally: check expiration time if needed
+        // const token = await user.getIdToken(); // You can optionally re-store a fresh token
+        
       }
     });
 
