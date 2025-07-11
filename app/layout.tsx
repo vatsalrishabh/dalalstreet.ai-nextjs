@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
+import DaisyUiThemeProvider from "@/providers/DaisyUiThemeProvider";
+import AuthListener from "@/components/common/Signup/AuthListner";
+import "animate.css";
+
 
 
 const geistSans = Geist({
@@ -27,8 +31,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        
   <ReduxProvider>
+    <DaisyUiThemeProvider>
+      <AuthListener/>      {/* automatic logoout if the firebase token expires */}
           {children}
+          </DaisyUiThemeProvider>
    </ReduxProvider>
       </body>
     </html>

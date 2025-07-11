@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
 
 export default function Dashboard() {
-  const theme = useSelector((state: RootState) => state.theme.mode);
+  // const theme = useSelector((state: RootState) => state.theme.mode);
   const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
   const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
@@ -34,7 +34,7 @@ export default function Dashboard() {
   };
 console.log(firebaseIdToken)
   return (
-    <div data-theme={theme} className="Main-all-App">
+    <div  className="Main-all-App">
       <Navbar />
       <LeftBadgeOne />
       <LeftBadgeTwo />

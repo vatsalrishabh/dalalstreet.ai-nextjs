@@ -13,14 +13,15 @@ export type ThemeType =
   | 'luxury'
   | 'dracula'
   | 'maroon'
-  | 'custom-ameesh'; // auto suggested theme types
+  | 'custom-ameesh'// auto suggested theme types
+  | 'mytheme';
 
 interface ThemeState {
   mode: ThemeType;
 }
 
 const initialState: ThemeState = {
-  mode: 'dark',
+  mode: 'mytheme',
 };
 
 export const themeSlice = createSlice({

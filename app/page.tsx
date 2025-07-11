@@ -1,128 +1,138 @@
 "use client";
-// pages/index.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/redux/store";
+import { setTheme } from "@/store/redux/slices/themeSlice";
+import { Moon, Sun } from "lucide-react";
+import DaisyNavbar from "@/components/common/Navbar/DaisyNavbar";
+import "animate.css";
 
-export default function Home() {
-  const [query, setQuery] = useState('');
-  const screenerRef = useRef<HTMLDivElement | null>(null)
+export default function Page() {
+  const theme = useSelector((state: RootState) => state.theme.mode);
+  const dispatch = useDispatch();
+
+  const toggleTheme = () => {
+    dispatch(setTheme(theme === "mytheme" ? "dark" : "mytheme"));
+  };
+
+  const [query, setQuery] = useState("");
+  const screenerRef = useRef<HTMLDivElement | null>(null);
 
   const handleSample = (text: string) => {
     setQuery(text);
-    screenerRef.current?.scrollIntoView({ behavior: 'smooth' });
+    screenerRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
   const startScreening = () => {
-    if (screenerRef.current) {
-      screenerRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    screenerRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5EE] text-gray-900 relative">
-      {/* Nav */}
-      <nav className="absolute top-0 left-0 w-full p-6 flex justify-end space-x-8">
-        <a href="#features" className="hover:text-orange-600">Features</a>
-        <a href="#pricing" className="hover:text-orange-600">Pricing</a>
-        <a href="#login" className="hover:text-orange-600">Login</a>
-      </nav>
+    <div data-theme={theme} className="min-h-screen bg-base-100 text-base-content font-sans">
+      {/* Navbar */}
+      <DaisyNavbar />
 
-      {/* Hero / Chat Section */}
-      <div className="flex flex-col items-center justify-center h-screen px-6 relative z-10">
-        <h1 className="text-5xl font-extrabold text-center mb-4 leading-tight">
-          Find the right stocks<br />by just having a conversation
-        </h1>
-        <p className="text-center text-gray-600 mb-6">
-          Describe what you need or pick an example to get instant insights.
-        </p>
-        {/* Input + Samples + CTA */}
-        <div className="space-y-4 w-full max-w-lg">
+      {/* Hero Section */}
+      <section className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-32 px-4 text-center">
+        <div className="max-w-screen-md w-full space-y-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+            <span className="block animate__animated animate__backInDown">
+              Find the Right Stocks
+            </span>
+            <span className="block text-primary animate__animated animate__heartBeat animate__delay-1s">
+              Just by Talking
+            </span>
+          </h1>
+
+          <p className="text-base-content/70 text-lg mb-4">
+            Type your stock criteria or choose a sample to explore curated stock data instantly.
+          </p>
+
+          {/* Input */}
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g. 'High dividend yield telecom stocks'"
-            className="w-full px-5 py-3 bg-white border border-gray-300 rounded-full 
-                       focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition"
+            placeholder="e.g. 'High dividend telecom stocks'"
+            className="w-full px-5 py-3 bg-base-200 border border-base-300 rounded-full 
+                       focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
           />
-          {/* Sample prompts */}
-          <div className="flex flex-wrap gap-3">
-            {[
-              'Screen tech stocks last 6 months',
-              'Find low P/E value stocks',
-            ].map((txt) => (
+
+          {/* Sample Prompts */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {["Screen tech stocks last 6 months", "Find low P/E value stocks"].map((txt) => (
               <button
                 key={txt}
                 onClick={() => handleSample(txt)}
-                className="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-medium 
-                           hover:bg-orange-200 transition"
+                className="px-4 py-2 bg-accent text-accent-content rounded-full text-sm font-medium 
+                           hover:bg-accent/80 transition duration-200"
               >
                 {txt}
               </button>
             ))}
           </div>
-          {/* Start Screening CTA */}
+
+          {/* CTA Button */}
           <button
             onClick={startScreening}
-            className="w-full py-3 mt-4 bg-orange-600 text-white rounded-full font-semibold 
-                       shadow-md hover:bg-orange-700 transition"
+            className="w-full py-3 bg-primary text-primary-content rounded-full font-semibold text-lg 
+                       shadow-md hover:bg-primary/80 transition duration-200"
           >
-            Start Screening
+            🔍 Start Screening
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Screener Section */}
-      <div
-        ref={screenerRef}
-        className="min-h-screen px-8 py-12 bg-white"
-      >
-        <h2 className="text-3xl font-bold text-center mb-8">
-          Stock Screener
-        </h2>
+      <section ref={screenerRef} className="px-4 sm:px-6 py-20 bg-base-200">
+        <div className="max-w-screen-lg mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 text-base-content">
+            📊 Stock Screener
+          </h2>
 
-        {/* Filter controls */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {['Sector', 'Market Cap', 'P/E Ratio'].map((label) => (
-            <select
-              key={label}
-              className="p-3 bg-white border border-gray-300 rounded-xl text-gray-800 
-                         focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 transition"
-              aria-label={label}
-            >
-              <option className="bg-white">{label}</option>
-              {/* …options */}
-            </select>
-          ))}
-        </div>
-
-        {/* Sample results table */}
-        <div className="max-w-4xl mx-auto overflow-x-auto rounded-2xl bg-gray-50 shadow-md">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-gray-200">
-                {['Ticker', 'Company', 'P/E', 'Market Cap'].map((h) => (
-                  <th key={h} className="py-3 px-4 text-gray-700">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { t: 'AAPL', c: 'Apple Inc.', pe: 28.5, m: '$2.3T' },
-                { t: 'MSFT', c: 'Microsoft Corp.', pe: 34.2, m: '$2.1T' },
-              ].map(({ t, c, pe, m }) => (
-                <tr
-                  key={t}
-                  className="border-b border-gray-200 hover:bg-gray-100 transition"
+          {/* Filters */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            {["Sector", "Market Cap", "P/E Ratio"].map((label) => (
+              <div key={label}>
+                <label className="block text-base-content font-medium mb-2">{label}</label>
+                <select
+                  className="w-full p-3 bg-base-100 border border-base-300 rounded-xl 
+                             text-base-content focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                 >
-                  <td className="py-3 px-4 font-medium">{t}</td>
-                  <td className="px-4">{c}</td>
-                  <td className="px-4">{pe}</td>
-                  <td className="px-4">{m}</td>
+                  <option>{`Select ${label}`}</option>
+                </select>
+              </div>
+            ))}
+          </div>
+
+          {/* Results */}
+          <div className="overflow-x-auto rounded-2xl bg-base-100 shadow">
+            <table className="min-w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-base-300 bg-base-300/30">
+                  {["Ticker", "Company", "P/E", "Market Cap"].map((h) => (
+                    <th key={h} className="py-4 px-6 text-base-content font-semibold whitespace-nowrap">
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[{ t: "AAPL", c: "Apple Inc.", pe: 28.5, m: "$2.3T" },
+                  { t: "MSFT", c: "Microsoft Corp.", pe: 34.2, m: "$2.1T" }
+                ].map(({ t, c, pe, m }, i) => (
+                  <tr key={t} className={`border-b ${i % 2 === 0 ? "bg-base-100" : "bg-base-200"} hover:bg-accent/10 transition`}>
+                    <td className="py-4 px-6 font-medium text-primary whitespace-nowrap">{t}</td>
+                    <td className="px-6 whitespace-nowrap">{c}</td>
+                    <td className="px-6 whitespace-nowrap">{pe}</td>
+                    <td className="px-6 whitespace-nowrap">{m}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

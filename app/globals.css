@@ -6,48 +6,49 @@
 
 @plugin "daisyui/theme" {
   name: "mytheme";
-  default: true; /* set as default */
-  prefersdark: false; /* set as default dark mode (prefers-color-scheme:dark) */
-  color-scheme: light; /* color of browser-provided UI */
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
 
-/* Tailwind / DaisyUI theme with custom greyscale palette */
-  /* DARK BACKGROUND COLORS */
-  --color-base-100: #000000;       /* pure black */
-  --color-base-200: #292929;       /* dark grey */
-  --color-base-300: #676767;       /* mid grey */
+  /* Tailwind / DaisyUI theme with custom greyscale palette */
 
-  /* TEXT / FOREGROUND COLORS */
-  --color-base-content: #F5F7FF;   /* almost white - high contrast text */
+  /* BACKGROUND COLORS */
+  --color-base-100: #FFF8F1;       /* Hero background, input & table - light orange tint */
+  --color-base-200: #FFE5D0;       /* Screener section, navbar - pastel orange */
+  --color-base-300: #FFB380;       /* Table header row - medium orange */
 
-  /* BRAND COLORS BASED ON GREY PALETTE */
-  --color-primary: #96A7B0;        /* Everest Blue-Grey */
-  --color-primary-content: #ffffff;
+  /* TEXT COLORS */
+  --color-base-content: #3B1F00;   /* Body text, table content - deep brown for contrast */
 
-  --color-secondary: #B5B1B1;      /* Grey Hair muted tone */
-  --color-secondary-content: #000000;
+  /* BRAND COLORS */
+  --color-primary: #FF6A00;        /* Logo, CTA button bg, tickers - bright orange */
+  --color-primary-content: #FFFFFF; /* CTA button text - white for contrast */
 
-  --color-accent: #DEEEFA;         /* Everest blue tint for highlights */
-  --color-accent-content: #000000;
+  --color-secondary: #FF9F40;      /* Optional secondary - orange muted */
+  --color-secondary-content: #3B1F00; /* Dark brown text */
 
-  --color-neutral: #858280;        /* Grey Hair base */
-  --color-neutral-content: #F5F7FF;
+  --color-accent: #FFD8A8;         /* Sample prompts bg - soft peach/orange tint */
+  --color-accent-content: #3B1F00; /* Sample prompt text - dark brown */
 
-  --color-info: #A8A8A8;           /* Atomic mid grey */
-  --color-info-content: #ffffff;
+  --color-neutral: #CC5500;        /* Disabled/footer - burnt orange */
+  --color-neutral-content: #FFF8F1; /* Light cream text */
 
-  --color-success: #A8A7AC;        /* from Neutral Greys */
-  --color-success-content: #000000;
+  --color-info: #FFA94D;           /* Info badges - soft orange */
+  --color-info-content: #3B1F00;   /* Info text - dark brown */
 
-  --color-warning: #BABABA;        /* Pastel Grey Gradient */
-  --color-warning-content: #000000;
+  --color-success: #FF922B;        /* Success badge - bold orange */
+  --color-success-content: #3B1F00; /* Success text - dark brown */
 
-  --color-error: #C3C5C9;          /* Everest Grey soft */
-  --color-error-content: #000000;
+  --color-warning: #FFC078;        /* Warning alerts - mellow orange */
+  --color-warning-content: #3B1F00; /* Warning text - dark brown */
+
+  --color-error: #FFD8C2;          /* Error fields - light orange/red blend */
+  --color-error-content: #3B1F00;  /* Error text - dark brown */
 
   /* BORDER & EFFECTS */
-  --radius-selector: 1rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
+  --radius-selector: 1rem;         /* Buttons */
+  --radius-field: 0.25rem;         /* Input fields */
+  --radius-box: 0.5rem;            /* Card/table box */
 
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
@@ -55,8 +56,9 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-
 }
+
+
 
 /* Optional: Firefox support */
 .custom-scrollbar {
