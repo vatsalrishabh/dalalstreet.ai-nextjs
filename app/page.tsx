@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
 // import { setTheme } from "@/store/redux/slices/themeSlice";
 // import { Moon, Sun } from "lucide-react";
