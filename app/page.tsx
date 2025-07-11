@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/redux/store";
 import { setTheme } from "@/store/redux/slices/themeSlice";
-import { Moon, Sun } from "lucide-react";
+// import { Moon, Sun } from "lucide-react";
 import DaisyNavbar from "@/components/common/Navbar/DaisyNavbar";
 import "animate.css";
 
@@ -11,9 +11,9 @@ export default function Page() {
   const theme = useSelector((state: RootState) => state.theme.mode);
   const dispatch = useDispatch();
 
-  const toggleTheme = () => {
-    dispatch(setTheme(theme === "mytheme" ? "dark" : "mytheme"));
-  };
+  // const toggleTheme = () => {
+  //   dispatch(setTheme(theme === "mytheme" ? "dark" : "mytheme"));
+  // };
 
   const [query, setQuery] = useState("");
   const screenerRef = useRef<HTMLDivElement | null>(null);
