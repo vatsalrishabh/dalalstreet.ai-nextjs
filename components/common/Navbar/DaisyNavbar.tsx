@@ -1,28 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store/redux/store";
-import { setTheme } from "@/store/redux/slices/themeSlice";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import SignupModal from "../Signup/SignupModal";
+import ToggleTheme from "../ToggleTheme/ToggleTheme";
+
+const navLinks = [
+  { href: "#features", label: "Features" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#screen", label: "Screens" },
+];
 
 const DaisyNavbar = () => {
-  const theme = useSelector((state: RootState) => state.theme.mode);
-  const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const toggleTheme = () => {
-    dispatch(setTheme(theme === "mytheme" ? "dark" : "mytheme"));
-  };
-
-  const navLinks = [
-    { href: "#features", label: "Features" },
-    { href: "#pricing", label: "Pricing" },
-    { href: "#screen", label: "Screens" },
-  ];
 
   return (
     <>
@@ -33,7 +25,7 @@ const DaisyNavbar = () => {
           <Link href="/" className="text-xl sm:text-2xl font-bold text-primary">
             <Typewriter
               words={["DalalStreet.ai", "Find. Screen. Profit."]}
-              loop={true}
+              loop
               cursor
               cursorStyle="|"
               typeSpeed={80}
@@ -56,22 +48,10 @@ const DaisyNavbar = () => {
           ))}
         </div>
 
-        {/* Right: Theme Toggle, SignupModal, Mobile Icon */}
+        {/* Right: Actions */}
         <div className="flex-none flex items-center gap-3">
-          {/* Theme toggle */}
-          <motion.button
-            onClick={toggleTheme}
-            whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-full hover:bg-base-200 transition"
-            aria-label="Toggle Theme"
-          >
-            {theme === "mytheme" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-          </motion.button>
-
-          {/* Sign Up / Avatar dropdown */}
+          <ToggleTheme /> {/* ✅ Used here */}
           <SignupModal />
-
-          {/* Mobile hamburger */}
           <div className="sm:hidden">
             <motion.button
               onClick={() => setMobileMenuOpen(true)}
@@ -128,19 +108,10 @@ const DaisyNavbar = () => {
               </motion.div>
             ))}
 
-            {/* Theme toggle inside mobile modal */}
-            <motion.button
-              onClick={() => {
-                toggleTheme();
-                setMobileMenuOpen(false);
-              }}
-              className="mt-6 p-3 rounded-full bg-base-300 hover:bg-base-200 transition"
-              aria-label="Toggle Theme"
-              whileTap={{ scale: 0.9 }}
-              whileHover={{ rotate: 5 }}
-            >
-              {theme === "mytheme" ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
-            </motion.button>
+            {/* ToggleTheme inside mobile modal */}
+            <div className="mt-6">
+              <ToggleTheme />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

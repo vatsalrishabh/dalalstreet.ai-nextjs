@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface Props {
   onSend: (text: string) => void;
@@ -8,7 +9,17 @@ interface Props {
 }
 
 const ChatInput = ({ onSend, disabled = false }: Props) => {
-  const [input, setInput] = useState('');
+  const searchParams = useSearchParams();
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    const query = searchParams.get("query");
+    if (query) {
+      setInput(query);
+      // Automatically send after setting input
+      onSend(query.trim());
+    }
+  }, [searchParams]);
 
   const handleSend = () => {
     if (!input.trim() || disabled) return;
@@ -31,6 +42,7 @@ const ChatInput = ({ onSend, disabled = false }: Props) => {
         onClick={handleSend}
         disabled={disabled}
         className="btn btn-primary"
+        id="autoSend"
       >
         {disabled ? 'Thinking...' : 'Send'}
       </button>

@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import ChatInput from '../common/ChatInput';
 import { getLLMResponse } from '@/services/llmServices';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessage {
   sender: 'user' | 'ai';
@@ -18,7 +20,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }, [messages, isResponding]);
+  }, [messages]);
 
   const handleSend = async (prompt: string) => {
     if (!prompt.trim()) return;
@@ -28,34 +30,28 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
 
     try {
       const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
+
+      // Parse full structured response (single markdown message expected)
       const lines = response.split('\n').map((line) => line.trim());
 
-      const chunks: string[] = [];
-
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
+      const fullResponse = lines
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => {
           try {
             const parsed = JSON.parse(line.replace('data: ', ''));
             if (parsed.action_type === 'llm_response' && parsed.message) {
-              const msgParts = parsed.message
-                .split(/\n{2,}|\n(?=\d+\.)/)
-                .map((m:string) => m.trim())
-                .filter(Boolean);
-              chunks.push(...msgParts);
+              return parsed.message;
             }
           } catch (e) {
-            console.log(e)
-            console.warn('❌ Failed to parse JSON:', line);
+            return null;
           }
-        }
-      }
+        })
+        .filter(Boolean)
+        .join('\n\n');
 
-      for (let i = 0; i < chunks.length; i++) {
-        await new Promise((res) => setTimeout(res, 500));
-        setMessages((prev) => [...prev, { sender: 'ai', content: chunks[i] }]);
-      }
+      setMessages((prev) => [...prev, { sender: 'ai', content: fullResponse || '❌ No response.' }]);
     } catch (err) {
-      console.log(err)
+      console.error('❌ Error getting response:', err);
       setMessages((prev) => [
         ...prev,
         { sender: 'ai', content: '❌ AI failed to respond.' },
@@ -66,7 +62,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen relative bg-base-200">
+    <div className="flex flex-col h-full relative bg-base-200">
       <div
         ref={chatRef}
         className="flex-1 overflow-y-auto p-4 space-y-3 pb-28 scroll-smooth"
@@ -74,20 +70,45 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`p-3 rounded-lg shadow-md whitespace-pre-wrap text-sm max-w-[85%] ${
+            className={`p-4 rounded-xl shadow-md max-w-[90%] text-sm whitespace-pre-wrap leading-relaxed tracking-wide ${
               msg.sender === 'user'
                 ? 'bg-primary text-primary-content self-end'
-                : 'bg-neutral text-neutral-content self-start'
+                : 'bg-white text-gray-800 self-start border border-gray-200'
             }`}
           >
-            <span className="font-semibold">
+            <div className="font-semibold mb-2">
               {msg.sender === 'user' ? '🧑‍💼 You:' : '🤖 AI:'}
-            </span>{' '}
-            {msg.content}
+            </div>
+
+            {msg.sender === 'ai' ? (
+              <div className="prose prose-sm max-w-none">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    ul: (props) => (
+                      <ul className="list-disc list-inside space-y-1 text-sm" {...props} />
+                    ),
+                    ol: (props) => (
+                      <ol className="list-decimal list-inside space-y-1 text-sm" {...props} />
+                    ),
+                    li: (props) => <li className="ml-2" {...props} />,
+                    strong: (props) => (
+                      <strong className="font-semibold text-gray-900" {...props} />
+                    ),
+                    p: (props) => (
+                      <p className="mb-2 text-sm text-gray-700" {...props} />
+                    ),
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <p>{msg.content}</p>
+            )}
           </div>
         ))}
 
-        {/* Typing indicator */}
         {isResponding && (
           <div className="flex items-center gap-2 p-3 bg-neutral text-neutral-content rounded-lg w-fit animate-pulse">
             <span className="font-semibold">🤖 AI:</span>
@@ -97,7 +118,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
         )}
       </div>
 
-      <div className="absolute bottom-8 left-0 right-0 bg-base-100 shadow-md">
+      <div className="absolute bottom-12 left-0 right-0 bg-base-100 shadow-md">
         <ChatInput onSend={handleSend} disabled={isResponding} />
       </div>
     </div>

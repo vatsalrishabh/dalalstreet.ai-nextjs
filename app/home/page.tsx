@@ -39,7 +39,7 @@ console.log(firebaseIdToken)
       <LeftBadgeOne />
       <LeftBadgeTwo />
 
-      <div className="h-screen w-screen overflow-hidden bg-base-100 text-base-content">
+      <div className="h-[91vh] w-screen overflow-hidden bg-base-100 text-base-content">
         <main className="h-full w-full">
           <PanelGroup direction="horizontal" className="h-full w-full">
             {/* Left Panel */}
@@ -108,7 +108,7 @@ console.log(firebaseIdToken)
             {/* Right Panel */}
            {/* Right Panel */}
 <Panel ref={rightPanelRef} defaultSize={30} minSize={0}>
-  <div className="h-full bg-base-200 rounded-r-xl shadow-inner p-4">
+  <div className="h-full bg-base-200 rounded-r-xl shadow-inner ">
     <h2 className="text-xl font-semibold mb-4 text-base-content">
       💬 Chat Assistant
     </h2>

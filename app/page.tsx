@@ -2,40 +2,38 @@
 import { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
-// import { setTheme } from "@/store/redux/slices/themeSlice";
-// import { Moon, Sun } from "lucide-react";
+import { useRouter } from "next/navigation"; // ✅ use `next/navigation` for App Router
 import DaisyNavbar from "@/components/common/Navbar/DaisyNavbar";
 import "animate.css";
 
 export default function Page() {
+  const router = useRouter();
   const theme = useSelector((state: RootState) => state.theme.mode);
-
-
-
   const [query, setQuery] = useState("");
   const screenerRef = useRef<HTMLDivElement | null>(null);
 
   const handleSample = (text: string) => {
     setQuery(text);
-    screenerRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (text) {
+      router.push(`/home/?query=${encodeURIComponent(text)}`);
+    }
   };
 
   const startScreening = () => {
-    screenerRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (query.trim()) {
+      router.push(`/home/?query=${encodeURIComponent(query.trim())}`);
+    }
   };
 
   return (
     <div data-theme={theme} className="min-h-screen bg-base-100 text-base-content font-sans">
-      {/* Navbar */}
       <DaisyNavbar />
 
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center min-h-screen pt-36 sm:pt-32 px-4 text-center">
+      <section className="flex flex-col items-center justify-center min-h-screen pt-16 sm:pt-24 px-4 text-center">
         <div className="max-w-screen-md w-full space-y-6">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-            <span className="block animate__animated animate__backInDown">
-              Find the Right Stocks
-            </span>
+            <span className="block animate__animated animate__backInDown">Find the Right Stocks</span>
             <span className="block text-primary animate__animated animate__heartBeat animate__delay-1s">
               Just by Talking
             </span>

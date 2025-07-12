@@ -20,11 +20,13 @@
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.3",
     "react-simple-typewriter": "^5.0.1",
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11",
+    "remark-gfm": "^4.0.1",
     "tailwind-scrollbar": "^4.0.2"
   },
   "devDependencies": {
