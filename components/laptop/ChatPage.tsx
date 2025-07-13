@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef,useCallback } from 'react';
 import ChatInput from '../common/ChatInput';
 import { getLLMResponse } from '@/services/llmServices';
 import ReactMarkdown from 'react-markdown';
@@ -25,55 +25,54 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
     }
   }, [messages]);
 
-  const handleSend = async (prompt: string) => {
-    if (!prompt.trim()) return;
+const handleSend = useCallback(async (prompt: string) => {
+  if (!prompt.trim()) return;
 
-    setMessages((prev) => [...prev, { sender: 'user', content: prompt }]);
-    setIsResponding(true);
+  setMessages((prev) => [...prev, { sender: 'user', content: prompt }]);
+  setIsResponding(true);
 
-    try {
-      const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
-      const lines = response.split('\n').map((line) => line.trim());
+  try {
+    const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
+    const lines = response.split('\n').map((line) => line.trim());
 
-      let fullResponse = '';
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          try {
-            const json = JSON.parse(line.replace('data: ', ''));
+    let fullResponse = '';
+    for (const line of lines) {
+      if (line.startsWith('data:')) {
+        try {
+          const json = JSON.parse(line.replace('data: ', ''));
 
-            // Handle screen_stock → set Redux state for StockTable
-            if (json.action_type === 'screen_stock' && json.query) {
-              dispatch(setStockParams({
-                query: json.query,
-                title: 'AI Suggested Stocks',
-                count: 10, // Or use json.columns.length if needed
-              }));
-            }
-
-            // Handle LLM text response
-            if (json.action_type === 'llm_response' && json.message) {
-              fullResponse += `${json.message}\n\n`;
-            }
-          } catch (err) {
-            console.error('❌ JSON parse error in LLM response:', err);
+          if (json.action_type === 'screen_stock' && json.query) {
+            dispatch(setStockParams({
+              query: json.query,
+              title: 'AI Suggested Stocks',
+              count: 10,
+            }));
           }
+
+          if (json.action_type === 'llm_response' && json.message) {
+            fullResponse += `${json.message}\n\n`;
+          }
+        } catch (err) {
+          console.error('❌ JSON parse error in LLM response:', err);
         }
       }
-
-      setMessages((prev) => [
-        ...prev,
-        { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
-      ]);
-    } catch (err) {
-      console.error('❌ Error getting response:', err);
-      setMessages((prev) => [
-        ...prev,
-        { sender: 'ai', content: '❌ AI failed to respond.' },
-      ]);
-    } finally {
-      setIsResponding(false);
     }
-  };
+
+    setMessages((prev) => [
+      ...prev,
+      { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
+    ]);
+  } catch (err) {
+    console.error('❌ Error getting response:', err);
+    setMessages((prev) => [
+      ...prev,
+      { sender: 'ai', content: '❌ AI failed to respond.' },
+    ]);
+  } finally {
+    setIsResponding(false);
+  }
+}, [firebaseIdToken, dispatch]); // ✅ fixed
+
 
   return (
     <div className="flex flex-col h-full relative bg-base-200">

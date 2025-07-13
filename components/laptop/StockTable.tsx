@@ -12,8 +12,8 @@ type Props = {
   query: string;
 };
 
-const formatNumber = (num: any): string => {
-  const parsed = typeof num === 'number' ? num : parseFloat(num);
+const formatNumber = (num: number | string | null | undefined): string => {
+ const parsed = typeof num === 'number' ? num : parseFloat(String(num));
   if (isNaN(parsed)) return 'N/A';
   return parsed.toFixed(2);
 };
