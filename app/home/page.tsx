@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 
 import StockTable from '@/components/laptop/StockTable';
 import ChatPage from '@/components/laptop/ChatPage';
-import Navbar from '@/components/common/Navbar/Navbar';
+// import Navbar from '@/components/common/Navbar/Navbar';
 import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
 import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 
@@ -19,10 +19,12 @@ import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
+import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 
 export default function Dashboard() {
   // const theme = useSelector((state: RootState) => state.theme.mode);
-  const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
+  const firebaseIdToken = useSelector((state: RootState) => state.auth.token); // firebase 
+  const { query, title, count } = useSelector((state: RootState) => state.table);
   const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
 
@@ -35,7 +37,7 @@ export default function Dashboard() {
 console.log(firebaseIdToken)
   return (
     <div  className="Main-all-App">
-      <Navbar />
+      <DaisyNavbar/>
       <LeftBadgeOne />
       <LeftBadgeTwo />
 
@@ -48,13 +50,15 @@ console.log(firebaseIdToken)
                 <h2 className="text-xl font-semibold mb-4 text-base-content">
                   Stock Table
                 </h2>
-               {firebaseIdToken && (
+              {firebaseIdToken && (
   <StockTable
-    title="Top Performing Stocks"
     firebaseIdToken={firebaseIdToken}
-    count={20}
+    query={query}
+    title={title}
+    count={count}
   />
 )}
+
 
               </div>
             </Panel>

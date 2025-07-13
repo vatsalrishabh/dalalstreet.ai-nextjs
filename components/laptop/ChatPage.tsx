@@ -5,6 +5,8 @@ import ChatInput from '../common/ChatInput';
 import { getLLMResponse } from '@/services/llmServices';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useDispatch } from 'react-redux';
+import { setStockParams } from '@/store/redux/slices/tableSlice';
 
 interface ChatMessage {
   sender: 'user' | 'ai';
@@ -12,6 +14,7 @@ interface ChatMessage {
 }
 
 const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
+  const dispatch = useDispatch();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isResponding, setIsResponding] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -30,26 +33,37 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
 
     try {
       const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
-
-      // Parse full structured response (single markdown message expected)
       const lines = response.split('\n').map((line) => line.trim());
 
-      const fullResponse = lines
-        .filter((line) => line.startsWith('data:'))
-        .map((line) => {
+      let fullResponse = '';
+      for (const line of lines) {
+        if (line.startsWith('data:')) {
           try {
-            const parsed = JSON.parse(line.replace('data: ', ''));
-            if (parsed.action_type === 'llm_response' && parsed.message) {
-              return parsed.message;
-            }
-          } catch (e) {
-            return null;
-          }
-        })
-        .filter(Boolean)
-        .join('\n\n');
+            const json = JSON.parse(line.replace('data: ', ''));
 
-      setMessages((prev) => [...prev, { sender: 'ai', content: fullResponse || '❌ No response.' }]);
+            // Handle screen_stock → set Redux state for StockTable
+            if (json.action_type === 'screen_stock' && json.query) {
+              dispatch(setStockParams({
+                query: json.query,
+                title: 'AI Suggested Stocks',
+                count: 10, // Or use json.columns.length if needed
+              }));
+            }
+
+            // Handle LLM text response
+            if (json.action_type === 'llm_response' && json.message) {
+              fullResponse += `${json.message}\n\n`;
+            }
+          } catch (err) {
+            console.error('❌ JSON parse error in LLM response:', err);
+          }
+        }
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
+      ]);
     } catch (err) {
       console.error('❌ Error getting response:', err);
       setMessages((prev) => [

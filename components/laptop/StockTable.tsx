@@ -12,15 +12,29 @@ type Props = {
   query: string;
 };
 
-const formatNumber = (num: number) => Number(num.toFixed(2));
+const formatNumber = (num: any): string => {
+  const parsed = typeof num === 'number' ? num : parseFloat(num);
+  if (isNaN(parsed)) return 'N/A';
+  return parsed.toFixed(2);
+};
 
-const StockTable: React.FC<Props> = ({ title = 'Top Stocks', count = 10, firebaseIdToken, query }) => {
+const StockTable: React.FC<Props> = ({
+  title = 'Top Stocks',
+  count = 10,
+  firebaseIdToken,
+  query,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: stocks, loading, error } = useSelector((state: RootState) => state.stocks);
 
   useEffect(() => {
-    if (firebaseIdToken && query) {
-      dispatch(fetchStocks({ token: firebaseIdToken, query }));
+    if (firebaseIdToken) {
+      dispatch(
+        fetchStocks({
+          token: firebaseIdToken,
+          query: query || 'market_capitalization > 10000',
+        })
+      );
     }
   }, [firebaseIdToken, query, dispatch]);
 
@@ -44,7 +58,7 @@ const StockTable: React.FC<Props> = ({ title = 'Top Stocks', count = 10, firebas
           <table className="table table-zebra table-sm bg-base-100 text-sm">
             <thead className="bg-base-200 text-base font-semibold text-base-content">
               <tr>
-                <th></th>
+                <th>#</th>
                 <th>Name</th>
                 <th>CMP ₹</th>
                 <th>P/E</th>
@@ -60,10 +74,10 @@ const StockTable: React.FC<Props> = ({ title = 'Top Stocks', count = 10, firebas
               </tr>
             </thead>
             <tbody>
-              {stocks.slice(0, count).map((stock, index) => (
+              {stocks?.slice(0, count).map((stock, index) => (
                 <tr key={stock.bse_code || index} className="hover:bg-base-300/20 transition-colors">
                   <td className="font-bold">{index + 1}</td>
-                  <td className="text-primary">{stock.name}</td>
+                  <td className="text-primary">{stock.name || 'N/A'}</td>
                   <td>₹{formatNumber(stock.current_price)}</td>
                   <td>{formatNumber(stock.price_to_earning)}</td>
                   <td>{formatNumber(stock.market_capitalization)}</td>

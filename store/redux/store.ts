@@ -4,6 +4,7 @@ import drawerReducer from './slices/drawerSlice';
 import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
 import stockReducer from './slices/stockSlice';
+import tableReducer from './slices/tableSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     theme:themeReducer,
     auth:authReducer,
     stocks: stockReducer,
+    table: tableReducer,
   },
 });
 

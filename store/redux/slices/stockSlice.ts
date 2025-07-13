@@ -14,7 +14,6 @@ const initialState: StockState = {
   error: null,
 };
 
-// Thunk to fetch stocks
 export const fetchStocks = createAsyncThunk(
   'stocks/fetchStocks',
   async ({ token, query }: { token: string; query: string }, thunkAPI) => {
@@ -22,7 +21,7 @@ export const fetchStocks = createAsyncThunk(
       const res = await getStockScreenResults(token, query);
       return res.data;
     } catch (err: any) {
-      return thunkAPI.rejectWithValue(err.message || 'Error fetching stocks');
+      return thunkAPI.rejectWithValue(err?.response?.data?.message || 'Error fetching stocks');
     }
   }
 );
