@@ -32,7 +32,7 @@ useEffect(() => {
   router.push(`/home/?query=${encodeURIComponent("High dividend telecom stocks")}`);
   }, 2000); // 
   setLoaderState(true);
-},[loaderState]);
+},[loaderState, router]);
 
   if(loaderState){
     return (
