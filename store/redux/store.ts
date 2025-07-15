@@ -5,6 +5,7 @@ import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
 import stockReducer from './slices/stockSlice';
 import tableReducer from './slices/tableSlice';
+import screenReducer from './slices/screenSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     auth:authReducer,
     stocks: stockReducer,
     table: tableReducer,
+     screen: screenReducer, 
   },
 });
 
