@@ -42,11 +42,11 @@ useEffect(() => {
   console.log("Firebase ID Token:", firebaseIdToken);
 }, [firebaseIdToken]);
 
-if (!firebaseIdToken) {
-  return   <div className="h-screen flex justify-center items-center">
-        <Loader />
-      </div>;
-}
+// if (!firebaseIdToken) {
+//   return   <div className="h-screen flex justify-center items-center">
+//         <Loader />
+//       </div>;
+// }
 
 
   return (
