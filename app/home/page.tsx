@@ -22,7 +22,7 @@ import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
 import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
-import Loader from '@/components/common/Loader';
+// import Loader from '@/components/common/Loader';
 import BottomTabNav from '@/components/smartphone/BottomTabNav';
 
 export default function Dashboard() {
