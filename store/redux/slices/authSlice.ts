@@ -6,19 +6,24 @@ interface AuthState {
   user: BackendUser | null;
   token: string | null;
   isAuthenticated: boolean;
-
 }
 
-const userDetails = localStorage.getItem('userDetails');
-const token = localStorage.getItem('token');
+// ✅ Fix: Prevent localStorage usage during SSR
+let userDetails: BackendUser | null = null;
+let token: string | null = null;
+
+if (typeof window !== "undefined") {
+  const storedUser = localStorage.getItem('userDetails');
+  const storedToken = localStorage.getItem('token');
+  userDetails = storedUser ? JSON.parse(storedUser) : null;
+  token = storedToken ?? null;
+}
 
 const initialState: AuthState = {
-  user: userDetails ? (JSON.parse(userDetails) as BackendUser) : null,
-  token: token ?? null,
+  user: userDetails,
+  token: token,
   isAuthenticated: !!token,
 };
-
- // in the begining it will be like this user will have uid,name,dpUrl,credits etc
 
 const authSlice = createSlice({
   name: 'auth',
@@ -29,20 +34,25 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuthenticated = true;
 
-        // persist in localStorage
-  localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
-  localStorage.setItem('token', action.payload.token);
+      // ✅ Safe: runs only in browser
+      if (typeof window !== "undefined") {
+        localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
+        localStorage.setItem('token', action.payload.token);
+      }
     },
     logout(state) {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
 
-       localStorage.removeItem('userDetails');
-  localStorage.removeItem('token');
+      // ✅ Safe: runs only in browser
+      if (typeof window !== "undefined") {
+        localStorage.removeItem('userDetails');
+        localStorage.removeItem('token');
+      }
     },
   },
 });
 
 export const { login, logout } = authSlice.actions;
-export default authSlice.reducer; // ✅ REQUIRED!
+export default authSlice.reducer;

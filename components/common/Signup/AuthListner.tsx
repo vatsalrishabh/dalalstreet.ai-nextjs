@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect } from "react";
 import { getAuth, onIdTokenChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
@@ -13,17 +13,36 @@ export default function AuthListener() {
 
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
       if (!user) {
-        // Token expired or user signed out
+        console.warn("🚫 User not found — logging out");
         dispatch(logout());
         clearAuthFromLocalStorage();
-        console.warn("🔒 Logged out due to expired or invalid token.");
-      } else {
-        // const token = await user.getIdToken(); // You can optionally re-store a fresh token
-        
       }
     });
 
-    return () => unsubscribe(); // cleanup on unmount
+    // 🔁 Check every 5 minutes if the token is expired
+    const tokenCheckInterval = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const tokenResult = await user.getIdTokenResult();
+          const expTime = new Date(tokenResult.expirationTime).getTime();
+          const now = Date.now();
+
+          if (now > expTime) {
+            console.warn("⚠️ Token expired — logging out");
+            dispatch(logout());
+            clearAuthFromLocalStorage();
+          }
+        } catch (err) {
+          console.error("Token check failed", err);
+        }
+      }
+    }, 5 * 60 * 1000); // every 5 minutes
+
+    return () => {
+      unsubscribe();
+      clearInterval(tokenCheckInterval);
+    };
   }, [dispatch]);
 
   return null;

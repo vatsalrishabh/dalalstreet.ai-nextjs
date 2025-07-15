@@ -17,6 +17,7 @@ export const clearAuthFromLocalStorage = () => {
 
 export const getUserInfoFromLocalStorage = (): { user: BackendUser; token: string } | null => {
   try {
+     if (typeof window === "undefined") return null;
     const data = localStorage.getItem('userInfo');
     if (!data) return null;
 

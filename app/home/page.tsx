@@ -144,15 +144,17 @@ if (!firebaseIdToken) {
 <BottomTabNav/>
 
 {firebaseIdToken && (
+  <div className='lg:hidden '>
   <StockTable
     firebaseIdToken={firebaseIdToken}
     query={query}
     title={title}
     count={count}
   />
+  </div>
 )}
 
- <div className="h-full bg-base-200 rounded-r-xl shadow-inner ">
+ <div className=" lg:hidden h-full bg-base-200 rounded-r-xl shadow-inner ">
     <h2 className="text-xl font-semibold mb-4 text-base-content">
       💬 Chat Assistant
     </h2>
