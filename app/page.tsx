@@ -1,16 +1,18 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/redux/store";
 import { useRouter } from "next/navigation"; // ✅ use `next/navigation` for App Router
 import DaisyNavbar from "@/components/common/Navbar/DaisyNavbar";
 import "animate.css";
+import Loader from "@/components/common/Loader";
 
 export default function Page() {
   const router = useRouter();
   const theme = useSelector((state: RootState) => state.theme.mode);
   const [query, setQuery] = useState("");
   const screenerRef = useRef<HTMLDivElement | null>(null);
+  const [loaderState, setLoaderState] = useState(true);
 
   const handleSample = (text: string) => {
     setQuery(text);
@@ -24,6 +26,20 @@ export default function Page() {
       router.push(`/home/?query=${encodeURIComponent(query.trim())}`);
     }
   };
+
+useEffect(() => {
+  setTimeout(() => {
+  router.push(`/home/?query=${encodeURIComponent("High dividend telecom stocks")}`);
+  }, 2000); // Simulate loading for 2 seconds
+},[loaderState]);
+
+  if(loaderState){
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div data-theme={theme} className="min-h-screen bg-base-100 text-base-content font-sans">

@@ -9,11 +9,16 @@ interface AuthState {
 
 }
 
+const userDetails = localStorage.getItem('userDetails');
+const token = localStorage.getItem('token');
+
 const initialState: AuthState = {
-  user: null,
-  token: null,
-  isAuthenticated: false,
-}; // in the begining it will be like this user will have uid,name,dpUrl,credits etc
+  user: userDetails ? (JSON.parse(userDetails) as BackendUser) : null,
+  token: token ?? null,
+  isAuthenticated: !!token,
+};
+
+ // in the begining it will be like this user will have uid,name,dpUrl,credits etc
 
 const authSlice = createSlice({
   name: 'auth',
@@ -23,11 +28,18 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
+
+        // persist in localStorage
+  localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
+  localStorage.setItem('token', action.payload.token);
     },
     logout(state) {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+
+       localStorage.removeItem('userDetails');
+  localStorage.removeItem('token');
     },
   },
 });

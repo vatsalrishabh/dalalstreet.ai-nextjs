@@ -1,12 +1,14 @@
 'use client';
-
+// the main logic of the page is it displays table and chatbot side by side for laptop 
+// for smartphone I will set the entire Laptop-view to hidden and display other componets coming from /smartphne folder instead
+// this is done to make the page responsive and also to make it look good on laptop and
 import {
   Panel,
   PanelGroup,
   PanelResizeHandle,
   ImperativePanelHandle,
 } from 'react-resizable-panels';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 import StockTable from '@/components/laptop/StockTable';
@@ -20,6 +22,8 @@ import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
 import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
+import Loader from '@/components/common/Loader';
+import BottomTabNav from '@/components/smartphone/BottomTabNav';
 
 export default function Dashboard() {
   // const theme = useSelector((state: RootState) => state.theme.mode);
@@ -34,14 +38,25 @@ export default function Dashboard() {
       setChatOpen(!chatOpen);
     }
   };
-console.log(firebaseIdToken)
+useEffect(() => {
+  console.log("Firebase ID Token:", firebaseIdToken);
+}, [firebaseIdToken]);
+
+if (!firebaseIdToken) {
+  return   <div className="h-screen flex justify-center items-center">
+        <Loader />
+      </div>;
+}
+
+
   return (
     <div  className="Main-all-App">
-      <DaisyNavbar/>
+      <DaisyNavbar/>       {/* universal navbar for all devices */}
       <LeftBadgeOne />
       <LeftBadgeTwo />
 
-      <div className="h-[91vh] w-screen overflow-hidden bg-base-100 text-base-content">
+{/* the laptop view is  below and smarpthone view is below the laptop view  */}
+      <div className="Laptop-view lg:block hidden lg:h-[91vh] w-screen overflow-hidden bg-base-100 text-base-content">
         <main className="h-full w-full">
           <PanelGroup direction="horizontal" className="h-full w-full">
             {/* Left Panel */}
@@ -125,6 +140,28 @@ console.log(firebaseIdToken)
           </PanelGroup>
         </main>
       </div>
+{/* the laptop view is above, below is only smarpthone view */}
+<BottomTabNav/>
+
+{firebaseIdToken && (
+  <StockTable
+    firebaseIdToken={firebaseIdToken}
+    query={query}
+    title={title}
+    count={count}
+  />
+)}
+
+ <div className="h-full bg-base-200 rounded-r-xl shadow-inner ">
+    <h2 className="text-xl font-semibold mb-4 text-base-content">
+      💬 Chat Assistant
+    </h2>
+    {firebaseIdToken && (
+      <ChatPage firebaseIdToken={firebaseIdToken} />
+    )}
+  </div>
+
+
     </div>
   );
 }

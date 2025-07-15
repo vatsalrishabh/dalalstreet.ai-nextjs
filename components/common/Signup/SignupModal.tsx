@@ -3,15 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import googlelogo from '@/assets/logo/googlelogo.webp';
-import { initiateGoogleOAuth } from '@/services/authService';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { initiateGoogleOAuth } from '@/services/authService'; // custom api call to handle goole login 
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'; 
 import { useDispatch } from 'react-redux';
-import { login } from '@/store/redux/slices/authSlice';
+import { login } from '@/store/redux/slices/authSlice'; //
 import {
   getUserInfoFromLocalStorage,
-  persistAuthToLocalStorage,
   clearAuthFromLocalStorage,
-} from '@/middleware/localStorage/authMiddleware';
+} from '@/middleware/localStorage/authMiddleware'; // for clearing logout localstorage midlware is used
 import '@/firebase/config';
 import { BackendUser } from '@/types/auth';
 
@@ -31,7 +30,7 @@ const SignupModal: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    clearAuthFromLocalStorage();
+    clearAuthFromLocalStorage();// clearing it here
     setUserDetails(null);
   };
 
@@ -50,7 +49,6 @@ const SignupModal: React.FC = () => {
       const userDpUrl = firebaseUser.photoURL || '';
 
       const user = { uid, email, phone_number, credits, userName, userDpUrl };
-      persistAuthToLocalStorage(user, token);
       setUserDetails({ user, token });
 
       dispatch(login({ user, token }));

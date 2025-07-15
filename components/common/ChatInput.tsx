@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   onSend: (text: string) => void;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const ChatInput = ({ onSend, disabled = false }: Props) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [input, setInput] = useState("");
 
@@ -24,6 +26,7 @@ const ChatInput = ({ onSend, disabled = false }: Props) => {
   const handleSend = () => {
     if (!input.trim() || disabled) return;
     onSend(input.trim());
+      router.push(`/home/?query=${encodeURIComponent(input.trim())}`);
     setInput('');
   };
 

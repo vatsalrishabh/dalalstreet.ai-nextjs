@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,13 +8,26 @@ import SignupModal from "../Signup/SignupModal";
 import ToggleTheme from "../ToggleTheme/ToggleTheme";
 
 const navLinks = [
-  { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
+  // { href: "#features", label: "Features" },
+  // { href: "#pricing", label: "Pricing" },
   { href: "#screen", label: "Screens" },
 ];
 
 const DaisyNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(true);
+
+  useEffect(() => {
+    const checkScreen = () => setIsLargeScreen(window.innerWidth >= 640);
+    checkScreen(); // initial
+
+    window.addEventListener('resize', checkScreen);
+    return () => window.removeEventListener('resize', checkScreen);
+  }, []);
+
+  const words = isLargeScreen
+    ? ['DalalStreet.ai', 'Find. Screen. Profit.']
+    : ['DalalStreet.ai'];
 
   return (
     <>
@@ -24,7 +37,7 @@ const DaisyNavbar = () => {
         <div className="flex-1">
           <Link href="/" className="text-xl sm:text-2xl font-bold text-primary">
             <Typewriter
-              words={["DalalStreet.ai", "Find. Screen. Profit."]}
+              words={words}
               loop
               cursor
               cursorStyle="|"
@@ -110,7 +123,7 @@ const DaisyNavbar = () => {
 
             {/* ToggleTheme inside mobile modal */}
             <div className="mt-6">
-              <ToggleTheme />
+              <ToggleTheme /> 
             </div>
           </motion.div>
         )}
