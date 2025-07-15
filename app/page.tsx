@@ -30,7 +30,8 @@ export default function Page() {
 useEffect(() => {
   setTimeout(() => {
   router.push(`/home/?query=${encodeURIComponent("High dividend telecom stocks")}`);
-  }, 2000); // Simulate loading for 2 seconds
+  }, 2000); // 
+  setLoaderState(true);
 },[loaderState]);
 
   if(loaderState){

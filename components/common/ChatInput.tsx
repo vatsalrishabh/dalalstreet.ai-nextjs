@@ -21,7 +21,7 @@ const ChatInput = ({ onSend, disabled = false }: Props) => {
       // Automatically send after setting input
       onSend(query.trim());
     }
-  }, [searchParams]);
+  }, [searchParams,onSend]);
 
   const handleSend = () => {
     if (!input.trim() || disabled) return;
