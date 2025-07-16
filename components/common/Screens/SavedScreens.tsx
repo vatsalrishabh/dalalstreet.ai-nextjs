@@ -1,5 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
 import Screen from './Screen';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllScreens } from '@/services/screenService';
@@ -19,7 +20,7 @@ export default function SavedScreens() {
   const [loading, setLoading] = useState(true);
   const token = useSelector((state: RootState) => state.auth.token);
 
-  const fetchScreens = async () => {
+  const fetchScreens = useCallback(async () => {
     try {
       if (!token) return;
       const data = await getAllScreens(token);
@@ -29,7 +30,7 @@ export default function SavedScreens() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   const handleDeleteRefresh = () => {
     fetchScreens(); // Re-fetch screens after delete
@@ -37,7 +38,7 @@ export default function SavedScreens() {
 
   useEffect(() => {
     fetchScreens();
-  }, [token]);
+  }, [fetchScreens]);
 
   return (
     <div className="px-4 py-6 min-h-screen bg-base-200">
