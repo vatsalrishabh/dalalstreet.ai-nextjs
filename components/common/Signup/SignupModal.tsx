@@ -1,17 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import googlelogo from '@/assets/logo/googlelogo.webp';
-import { initiateGoogleOAuth } from '@/services/authService'; // custom api call to handle goole login 
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'; 
-import { useDispatch } from 'react-redux';
-import { login } from '@/store/redux/slices/authSlice'; //
-import {
-  getUserInfoFromLocalStorage,
-  clearAuthFromLocalStorage,
-} from '@/middleware/localStorage/authMiddleware'; // for clearing logout localstorage midlware is used
+import { initiateGoogleOAuth } from '@/services/authService';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout } from '@/store/redux/slices/authSlice';
+import { clearAuthFromLocalStorage } from '@/middleware/localStorage/authMiddleware';
 import '@/firebase/config';
+import { RootState } from '@/store/redux/store';
 import { BackendUser } from '@/types/auth';
 
 import { LogOut, User, Mail, Coins } from 'lucide-react';
@@ -21,17 +19,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 const SignupModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userDetails, setUserDetails] = useState<{ user: BackendUser; token: string } | null>(null);
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const userInfo = getUserInfoFromLocalStorage();
-    setUserDetails(userInfo);
-  }, []);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const handleLogout = () => {
-    clearAuthFromLocalStorage();// clearing it here
-    setUserDetails(null);
+    clearAuthFromLocalStorage(); // optional if redux logout handles it already
+    dispatch(logout());
   };
 
   const handleGoogleSignup = async () => {
@@ -48,35 +42,41 @@ const SignupModal: React.FC = () => {
       const userName = firebaseUser.displayName || '';
       const userDpUrl = firebaseUser.photoURL || '';
 
-      const user = { uid, email, phone_number, credits, userName, userDpUrl };
-      setUserDetails({ user, token });
+      const backendUser: BackendUser = {
+        uid,
+        email,
+        phone_number,
+        credits,
+        userName,
+        userDpUrl,
+      };
 
-      dispatch(login({ user, token }));
+      dispatch(login({ user: backendUser, token }));
+      setIsOpen(false);
     } catch (err) {
       console.error('Login error:', err);
       alert('Login failed. Try again.');
     } finally {
       setLoading(false);
-      setIsOpen(false);
     }
   };
 
   return (
     <>
-      {/* Show avatar dropdown if logged in */}
-      {userDetails?.user ? (
+      {/* Avatar if logged in */}
+      {user ? (
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-sm btn-ghost px-2 rounded-full hover:bg-base-200 transition-transform hover:scale-105">
             <div className="flex items-center gap-2">
               <Image
-                src={userDetails.user.userDpUrl}
-                alt={userDetails.user.userName}
+                src={user.userDpUrl}
+                alt={user.userName}
                 width={36}
                 height={36}
                 className="rounded-full border-2 border-primary shadow-md"
               />
               <span className="text-sm font-semibold hidden sm:inline">
-                {userDetails.user.userName?.slice(0, 7)}...
+                {user.userName?.slice(0, 7)}...
               </span>
             </div>
           </div>
@@ -87,15 +87,15 @@ const SignupModal: React.FC = () => {
           >
             <li className="flex items-center gap-2">
               <User className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">{userDetails.user.userName}</span>
+              <span className="text-sm font-medium">{user.userName}</span>
             </li>
             <li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-secondary" />
-              <span className="text-sm truncate">{userDetails.user.email}</span>
+              <span className="text-sm truncate">{user.email}</span>
             </li>
             <li className="flex items-center gap-2">
               <Coins className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm">{userDetails.user.credits} Credits</span>
+              <span className="text-sm">{user.credits} Credits</span>
             </li>
             <li className="pt-2 border-t border-base-300 mt-2">
               <button
@@ -137,7 +137,7 @@ const SignupModal: React.FC = () => {
               exit={{ scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              {/* Close button */}
+              {/* Close Button */}
               <button
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors"
                 onClick={() => setIsOpen(false)}
@@ -149,7 +149,6 @@ const SignupModal: React.FC = () => {
                 </svg>
               </button>
 
-              {/* Content */}
               <div className="text-center space-y-2">
                 <h1 className="text-3xl font-extrabold text-primary animate__animated animate__fadeInDown">Welcome to DalalStreet.ai</h1>
                 <p className="text-gray-500 text-sm animate__animated animate__fadeIn animate__delay-1s">
@@ -157,7 +156,7 @@ const SignupModal: React.FC = () => {
                 </p>
               </div>
 
-              {/* Google Login Button */}
+              {/* Google Button */}
               <motion.button
                 onClick={handleGoogleSignup}
                 disabled={loading}

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef,useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import ChatInput from '../common/ChatInput';
 import { getLLMResponse } from '@/services/llmServices';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useDispatch } from 'react-redux';
 import { setStockParams } from '@/store/redux/slices/tableSlice';
+import { saveQueryToLocalHistory } from '@/lib/lastQueryLocal';
 
 interface ChatMessage {
   sender: 'user' | 'ai';
@@ -25,54 +26,62 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
     }
   }, [messages]);
 
-const handleSend = useCallback(async (prompt: string) => {
-  if (!prompt.trim()) return;
+  const handleSend = useCallback(
+    async (prompt: string) => {
+      if (!prompt.trim()) return;
 
-  setMessages((prev) => [...prev, { sender: 'user', content: prompt }]);
-  setIsResponding(true);
+      setMessages((prev) => [...prev, { sender: 'user', content: prompt }]);
+      setIsResponding(true);
 
-  try {
-    const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
-    const lines = response.split('\n').map((line) => line.trim());
+      try {
+        const response = await getLLMResponse(firebaseIdToken, prompt, 'sample');
+        const lines = response.split('\n').map((line) => line.trim());
 
-    let fullResponse = '';
-    for (const line of lines) {
-      if (line.startsWith('data:')) {
-        try {
-          const json = JSON.parse(line.replace('data: ', ''));
+        let fullResponse = '';
 
-          if (json.action_type === 'screen_stock' && json.query) {
-            dispatch(setStockParams({
-              query: json.query,
-              title: 'AI Suggested Stocks',
-              count: 10,
-            }));
+        for (const line of lines) {
+          if (line.startsWith('data:')) {
+            try {
+              const json = JSON.parse(line.replace('data: ', ''));
+
+              if (json.action_type === 'screen_stock' && json.query) {
+                // ✅ Save to local history
+                saveQueryToLocalHistory(json.stream_id || Date.now().toString(), json.query);
+
+                dispatch(
+                  setStockParams({
+                    query: json.query,
+                    title: 'AI Suggested Stocks',
+                    count: 10,
+                  })
+                );
+              }
+
+              if (json.action_type === 'llm_response' && json.message) {
+                fullResponse += `${json.message}\n\n`;
+              }
+            } catch (err) {
+              console.error('❌ JSON parse error in LLM response:', err);
+            }
           }
-
-          if (json.action_type === 'llm_response' && json.message) {
-            fullResponse += `${json.message}\n\n`;
-          }
-        } catch (err) {
-          console.error('❌ JSON parse error in LLM response:', err);
         }
+
+        setMessages((prev) => [
+          ...prev,
+          { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
+        ]);
+      } catch (err) {
+        console.error('❌ Error getting response:', err);
+        setMessages((prev) => [
+          ...prev,
+          { sender: 'ai', content: '❌ AI failed to respond.' },
+        ]);
+      } finally {
+        setIsResponding(false);
       }
-    }
-
-    setMessages((prev) => [
-      ...prev,
-      { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
-    ]);
-  } catch (err) {
-    console.error('❌ Error getting response:', err);
-    setMessages((prev) => [
-      ...prev,
-      { sender: 'ai', content: '❌ AI failed to respond.' },
-    ]);
-  } finally {
-    setIsResponding(false);
-  }
-}, [firebaseIdToken, dispatch]); // ✅ fixed
-
+    },
+    [firebaseIdToken, dispatch]
+  );
 
   return (
     <div className="flex flex-col h-full relative bg-base-200">
@@ -99,14 +108,23 @@ const handleSend = useCallback(async (prompt: string) => {
                   remarkPlugins={[remarkGfm]}
                   components={{
                     ul: (props) => (
-                      <ul className="list-disc list-inside space-y-1 text-sm" {...props} />
+                      <ul
+                        className="list-disc list-inside space-y-1 text-sm"
+                        {...props}
+                      />
                     ),
                     ol: (props) => (
-                      <ol className="list-decimal list-inside space-y-1 text-sm" {...props} />
+                      <ol
+                        className="list-decimal list-inside space-y-1 text-sm"
+                        {...props}
+                      />
                     ),
                     li: (props) => <li className="ml-2" {...props} />,
                     strong: (props) => (
-                      <strong className="font-semibold text-gray-900" {...props} />
+                      <strong
+                        className="font-semibold text-gray-900"
+                        {...props}
+                      />
                     ),
                     p: (props) => (
                       <p className="mb-2 text-sm text-gray-700" {...props} />
@@ -131,7 +149,7 @@ const handleSend = useCallback(async (prompt: string) => {
         )}
       </div>
 
-      <div className="absolute bottom-12 left-0 right-0 bg-base-100 shadow-md">
+      <div className="lg:absolute lg:bottom-12 lg:left-0 lg:right-0 bg-base-100 shadow-md fixed bottom-0 left-0 right-0">
         <ChatInput onSend={handleSend} disabled={isResponding} />
       </div>
     </div>
