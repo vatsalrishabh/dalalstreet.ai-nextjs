@@ -29,7 +29,6 @@ const StockTable: React.FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
   const { data: stocks, loading, error } = useSelector((state: RootState) => state.stocks);
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [screenTitle, setScreenTitle] = useState(title);
   const [screenDescription, setScreenDescription] = useState('Saved screen from query result');
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -46,20 +45,18 @@ const StockTable: React.FC<Props> = ({
   }, [firebaseIdToken, query, dispatch]);
 
   const openModal = () => {
-    setModalOpen(true);
     setScreenTitle(title);
     setScreenDescription('Saved screen from query result');
     dialogRef.current?.showModal();
   };
 
   const closeModal = () => {
-    setModalOpen(false);
     dialogRef.current?.close();
   };
 
   const handleSave = async () => {
     try {
-      const res = await saveScreen(firebaseIdToken, {
+      await saveScreen(firebaseIdToken, {
         title: screenTitle || 'Untitled Screen',
         description: screenDescription || 'No description',
         screen_query: query,
