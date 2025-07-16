@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check, Trash2 } from 'lucide-react';
 import { deleteScreen } from '@/services/screenService';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
+import { setStockParams } from '@/store/redux/slices/tableSlice';
+import { useRouter } from 'next/navigation';
 
 interface ScreenProps {
   title: string;
@@ -13,6 +15,7 @@ interface ScreenProps {
   timestamp: string;
   onDelete?: () => void;
 }
+
 
 export default function Screen({
   title,
@@ -25,6 +28,20 @@ export default function Screen({
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+
+   const dispatch = useDispatch();
+  const router = useRouter();
+
+ const handleQueryClick = () => {
+    dispatch(
+      setStockParams({
+        title,
+        query: screen_query,
+        count: 30, // or any specific count you want
+      })
+    );
+    router.push('/home'); // Navigate to the home page or wherever you want
+  };
 
   const token = useSelector((state: RootState) => state.auth.token);
   const [copied, setCopied] = useState(false);
@@ -71,7 +88,7 @@ export default function Screen({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="card-body">
+      <div className="card-body" onClick={handleQueryClick}>
         <h2 className="card-title text-base-content">{title}</h2>
         <p className="text-sm text-base-content">{description}</p>
 

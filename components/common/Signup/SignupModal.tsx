@@ -32,7 +32,8 @@ const SignupModal: React.FC = () => {
     setLoading(true);
     try {
       const auth = getAuth();
-      const provider = new GoogleAuthProvider();
+      const provider = new GoogleAuthProvider(); 
+      console.log(provider)
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
       const token = await firebaseUser.getIdToken();

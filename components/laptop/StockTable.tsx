@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from '@/store/redux/store';
 import { fetchStocks } from '@/store/redux/slices/stockSlice';
 import { saveScreen } from '@/services/screenService';
 import { X } from 'lucide-react';
+import { FixedSizeList as List } from 'react-window';
 
 type Props = {
   title?: string;
@@ -22,7 +23,7 @@ const formatNumber = (num: number | string | null | undefined): string => {
 
 const StockTable: React.FC<Props> = ({
   title = 'Top Stocks',
-  count = 10,
+
   firebaseIdToken,
   query,
 }) => {
@@ -69,14 +70,55 @@ const StockTable: React.FC<Props> = ({
     }
   };
 
+  const Row = ({ index, style, data }: any) => {
+    const stock = data[index];
+    return (
+      <tr key={stock.bse_code || index} style={style} className="hover:bg-base-300/20 transition-colors">
+        <td className="font-bold">{index + 1}</td>
+        <td className="text-primary">{stock.name || 'N/A'}</td>
+        <td>₹{formatNumber(stock.current_price)}</td>
+        <td>{formatNumber(stock.price_to_earning)}</td>
+        <td>{formatNumber(stock.market_capitalization)}</td>
+        <td>{formatNumber(stock.dividend_yield)}%</td>
+        <td>₹{formatNumber(stock.net_profit_latest_quarter)}</td>
+        <td
+          className={
+            stock.yoy_quarterly_profit_growth > 0
+              ? 'text-success'
+              : stock.yoy_quarterly_profit_growth < 0
+              ? 'text-error'
+              : ''
+          }
+        >
+          {formatNumber(stock.yoy_quarterly_profit_growth)}%
+        </td>
+        <td>₹{formatNumber(stock.sales_latest_quarter)}</td>
+        <td
+          className={
+            stock.yoy_quarterly_sales_growth > 0
+              ? 'text-success'
+              : stock.yoy_quarterly_sales_growth < 0
+              ? 'text-error'
+              : ''
+          }
+        >
+          {formatNumber(stock.yoy_quarterly_sales_growth)}%
+        </td>
+        <td>{formatNumber(stock.return_on_capital_employed)}%</td>
+        <td>{formatNumber(stock.industry_pe)}</td>
+        <td>{formatNumber(stock.price_to_book_value)}</td>
+      </tr>
+    );
+  };
+
   return (
     <div className="bg-base-100 p-4 rounded-xl shadow-lg text-base-content">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">{title}</h2>
         <div className="flex items-center gap-4">
-          {count && (
+          {stocks?.length && (
             <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
-              {count} Stocks
+              {stocks.length} Stocks
             </span>
           )}
           <button onClick={openModal} className="btn btn-sm btn-primary gap-2">
@@ -92,7 +134,7 @@ const StockTable: React.FC<Props> = ({
       ) : (
         <div className="overflow-x-auto rounded-xl custom-scrollbar border border-base-300">
           <table className="table table-zebra table-sm bg-base-100 text-sm">
-            <thead className="bg-base-200 text-base font-semibold text-base-content">
+            <thead className="bg-base-200 text-base font-semibold text-base-content sticky top-0 z-10">
               <tr>
                 <th>#</th>
                 <th>Name</th>
@@ -110,43 +152,19 @@ const StockTable: React.FC<Props> = ({
               </tr>
             </thead>
             <tbody>
-              {stocks?.slice(0, count).map((stock, index) => (
-                <tr key={stock.bse_code || index} className="hover:bg-base-300/20 transition-colors">
-                  <td className="font-bold">{index + 1}</td>
-                  <td className="text-primary">{stock.name || 'N/A'}</td>
-                  <td>₹{formatNumber(stock.current_price)}</td>
-                  <td>{formatNumber(stock.price_to_earning)}</td>
-                  <td>{formatNumber(stock.market_capitalization)}</td>
-                  <td>{formatNumber(stock.dividend_yield)}%</td>
-                  <td>₹{formatNumber(stock.net_profit_latest_quarter)}</td>
-                  <td
-                    className={
-                      stock.yoy_quarterly_profit_growth > 0
-                        ? 'text-success'
-                        : stock.yoy_quarterly_profit_growth < 0
-                        ? 'text-error'
-                        : ''
-                    }
+              <tr>
+                <td colSpan={13} className="p-0">
+                  <List
+                    height={610}
+                    itemCount={stocks.length}
+                    itemSize={48}
+                    width="100%"
+                    itemData={stocks}
                   >
-                    {formatNumber(stock.yoy_quarterly_profit_growth)}%
-                  </td>
-                  <td>₹{formatNumber(stock.sales_latest_quarter)}</td>
-                  <td
-                    className={
-                      stock.yoy_quarterly_sales_growth > 0
-                        ? 'text-success'
-                        : stock.yoy_quarterly_sales_growth < 0
-                        ? 'text-error'
-                        : ''
-                    }
-                  >
-                    {formatNumber(stock.yoy_quarterly_sales_growth)}%
-                  </td>
-                  <td>{formatNumber(stock.return_on_capital_employed)}%</td>
-                  <td>{formatNumber(stock.industry_pe)}</td>
-                  <td>{formatNumber(stock.price_to_book_value)}</td>
-                </tr>
-              ))}
+                    {Row}
+                  </List>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

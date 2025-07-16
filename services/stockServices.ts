@@ -5,7 +5,7 @@ export const getStockScreenResults = async (
   token: string,
   query: string = 'market_capitalization > 10000',
   page: number = 1,
-  limit: number = 50
+  limit: number = 999
 ) => {
   try {
     console.log('📤 Sending to API:', {

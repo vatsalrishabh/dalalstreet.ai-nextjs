@@ -53,7 +53,7 @@ export default function SavedScreens() {
           <AnimatePresence>
             {screens.map((screen) => (
               <Screen
-                key={screen.uid}
+               key={`${screen.uid}-${screen.timestamp}`}
                 title={screen.title}
                 description={screen.description}
                 screen_query={screen.screen_query}
