@@ -17,14 +17,23 @@ import BottomTabNav from '@/components/smartphone/BottomTabNav';
 
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
+import { setScreen } from '@/store/redux/slices/screenSlice';
+import { useDispatch } from 'react-redux';
+import { ArrowLeft } from 'lucide-react';
+import SavedScreens from '@/components/common/Screens/SavedScreens';
 
 export default function MainResponsivePage() {
   const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
   const { query, title, count } = useSelector((state: RootState) => state.table);
-  const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
+
 
   const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
+
+    const dispatch = useDispatch();
+  const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
+
+  const isActive = (screen: string) => currentScreen === screen;
 
   const toggleChatPanel = () => {
     if (rightPanelRef.current) {
@@ -39,7 +48,12 @@ export default function MainResponsivePage() {
 
   return (
     <div className="Main-all-App">
-      <DaisyNavbar />
+       {
+        !(currentScreen === 'chatbot') && (
+         <DaisyNavbar />
+        )
+      }
+  
       <LeftBadgeOne />
       <LeftBadgeTwo />
 
@@ -97,7 +111,7 @@ export default function MainResponsivePage() {
 
       {/* Smartphone View */}
       <div className="lg:hidden px-4 py-2">
-        {currentScreen === 'screens' && firebaseIdToken && (
+        {currentScreen === 'charts' && firebaseIdToken && (
           <StockTable
             firebaseIdToken={firebaseIdToken}
             query={query}
@@ -106,23 +120,40 @@ export default function MainResponsivePage() {
           />
         )}
 
-        {currentScreen === 'chatbot' && firebaseIdToken && (
-          <div className="bg-base-200 rounded-xl shadow-inner p-4">
-            <h2 className="text-xl font-semibold mb-4 text-base-content">💬 Chat Assistant</h2>
-            <ChatPage firebaseIdToken={firebaseIdToken} />
-          </div>
-        )}
+{currentScreen === 'chatbot' && firebaseIdToken && (
+  <div className="bg-base-200 rounded-xl shadow-inner p-4 pb-8">
+    {/* Sticky Back Icon Navbar */}
+    <div className="sticky top-0 z-10 bg-base-200 py-2">
+      <div
+        onClick={() => dispatch(setScreen('charts'))}
+        className="flex items-center text-sm cursor-pointer text-primary hover:underline"
+      >
+        <ArrowLeft className="w-5 h-5 mr-2" />
+        Back to Charts
+      </div>
+    </div>
 
-        {currentScreen === 'charts' && (
-          <div className="bg-base-200 rounded-xl shadow-inner p-4">
-            <h2 className="text-xl font-semibold mb-4 text-base-content">📊 Charts</h2>
-            <p className="text-sm text-base-content">[Charts component coming soon]</p>
-          </div>
+    {/* Content Below */}
+    <h2 className="text-xl font-semibold mt-4 mb-4 text-base-content">💬 Chat Assistant</h2>
+    <ChatPage firebaseIdToken={firebaseIdToken} />
+  </div>
+)}
+
+
+        {currentScreen === 'screens' && (
+          <div className="bg-base-200 rounded-xl shadow-inner">
+    <SavedScreens />
+  </div>
         )}
       </div>
 
       {/* Bottom Navigation */}
-      <BottomTabNav />
+      {
+        !(currentScreen === 'chatbot') && (
+          <BottomTabNav />
+        )
+      }
+     
     </div>
   );
 }

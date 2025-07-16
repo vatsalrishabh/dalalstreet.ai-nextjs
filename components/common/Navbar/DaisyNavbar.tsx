@@ -9,8 +9,8 @@ import ToggleTheme from "../ToggleTheme/ToggleTheme";
 
 const navLinks = [
   // { href: "#features", label: "Features" },
-  // { href: "#pricing", label: "Pricing" },
-  { href: "#screen", label: "Screens" },
+  { href: "/home", label: "Home" },
+  { href: "/screens", label: "Screens" },
 ];
 
 const DaisyNavbar = () => {

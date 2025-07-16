@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/redux/store';
 import { fetchStocks } from '@/store/redux/slices/stockSlice';
+import { saveScreen } from '@/services/screenService';
+import { X } from 'lucide-react';
 
 type Props = {
   title?: string;
@@ -13,7 +15,7 @@ type Props = {
 };
 
 const formatNumber = (num: number | string | null | undefined): string => {
- const parsed = typeof num === 'number' ? num : parseFloat(String(num));
+  const parsed = typeof num === 'number' ? num : parseFloat(String(num));
   if (isNaN(parsed)) return 'N/A';
   return parsed.toFixed(2);
 };
@@ -27,6 +29,11 @@ const StockTable: React.FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
   const { data: stocks, loading, error } = useSelector((state: RootState) => state.stocks);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [screenTitle, setScreenTitle] = useState(title);
+  const [screenDescription, setScreenDescription] = useState('Saved screen from query result');
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+
   useEffect(() => {
     if (firebaseIdToken) {
       dispatch(
@@ -38,15 +45,47 @@ const StockTable: React.FC<Props> = ({
     }
   }, [firebaseIdToken, query, dispatch]);
 
+  const openModal = () => {
+    setModalOpen(true);
+    setScreenTitle(title);
+    setScreenDescription('Saved screen from query result');
+    dialogRef.current?.showModal();
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    dialogRef.current?.close();
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await saveScreen(firebaseIdToken, {
+        title: screenTitle || 'Untitled Screen',
+        description: screenDescription || 'No description',
+        screen_query: query,
+      });
+      alert('✅ Screen saved successfully!');
+      closeModal();
+    } catch (error) {
+      console.error('❌ Failed to save screen:', error);
+      alert('❌ Failed to save screen. Check console.');
+    }
+  };
+
   return (
     <div className="bg-base-100 p-4 rounded-xl shadow-lg text-base-content">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">{title}</h2>
-        {count && (
-          <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
-            {count} Stocks
-          </span>
-        )}
+        <div className="flex items-center gap-4">
+          {count && (
+            <span className="px-4 py-2 rounded-full bg-primary/20 text-primary font-semibold text-base shadow-md border border-primary/30">
+              {count} Stocks
+            </span>
+          )}
+          <button onClick={openModal} className="btn btn-sm btn-primary gap-2">
+            💾 Save Screen
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -115,6 +154,51 @@ const StockTable: React.FC<Props> = ({
           </table>
         </div>
       )}
+
+      {/* DaisyUI Modal */}
+      <dialog ref={dialogRef} className="modal">
+        <div className="modal-box bg-base-100 border border-primary/30 shadow-xl">
+          <form method="dialog" className="flex justify-end">
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={closeModal}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </form>
+          <h3 className="font-bold text-lg mb-4 text-primary">💾 Save This Screen</h3>
+
+          <div className="form-control mb-3">
+            <label className="label text-sm font-semibold">Title</label>
+            <input
+              type="text"
+              placeholder="Screen title"
+              className="input input-bordered"
+              value={screenTitle}
+              onChange={(e) => setScreenTitle(e.target.value)}
+            />
+          </div>
+
+          <div className="form-control mb-3">
+            <label className="label text-sm font-semibold">Description</label>
+            <textarea
+              className="textarea textarea-bordered"
+              placeholder="Screen description"
+              value={screenDescription}
+              onChange={(e) => setScreenDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="modal-action">
+            <button onClick={handleSave} className="btn btn-primary">
+              ✅ Save
+            </button>
+            <form method="dialog">
+              <button className="btn">❌ Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
