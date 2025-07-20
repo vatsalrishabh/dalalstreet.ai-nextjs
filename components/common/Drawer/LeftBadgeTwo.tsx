@@ -14,19 +14,20 @@ const LeftBadgeTwo = () => {
   // Load last query on mount
   useEffect(() => {
     const history = getQueryHistory();
-
-      setQuery(history[0].query);
-        dispatch(setLatestQuery(query));
-      setResult(`🟢 Last Executed:\n${history[0].query}`);
-
-  }, []);
+    if (history.length > 0) {
+      const lastQuery = history[0].query;
+      setQuery(lastQuery);
+      dispatch(setLatestQuery(lastQuery));
+      setResult(`🟢 Last Executed:\n${lastQuery}`);
+    }
+  }, [dispatch]);
 
   const handleRunQuery = () => {
     if (!query.trim()) return;
 
-    // You can generate a dummy stream_id or from context
     const stream_id = Date.now().toString();
     saveQueryToLocalHistory(stream_id, query);
+    dispatch(setLatestQuery(query));
     setResult(`🟢 Executed:\n${query}`);
   };
 
@@ -34,7 +35,7 @@ const LeftBadgeTwo = () => {
     <div className="drawer hidden lg:block">
       <input id="left-drawer-two" type="checkbox" className="drawer-toggle" />
 
-      {/* Toggle Button - Lower Left */}
+      {/* Toggle Button */}
       <div className="drawer-content">
         <label
           htmlFor="left-drawer-two"
@@ -44,9 +45,9 @@ const LeftBadgeTwo = () => {
         </label>
       </div>
 
-      {/* Drawer Side */}
+      {/* Drawer Panel */}
       <div className="drawer-side z-40">
-        <label htmlFor="left-drawer-two" aria-label="close sidebar" className="drawer-overlay" />
+        <label htmlFor="left-drawer-two" className="drawer-overlay" aria-label="close sidebar" />
         <div className="menu bg-base-200 text-base-content min-h-full w-80 p-5 space-y-4">
           <h2 className="text-xl font-bold text-primary">🧠 SQL Query Chat</h2>
 
