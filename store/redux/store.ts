@@ -6,6 +6,7 @@ import authReducer from './slices/authSlice';
 import stockReducer from './slices/stockSlice';
 import tableReducer from './slices/tableSlice';
 import screenReducer from './slices/screenSlice';
+import queryReducer from './slices/querySlice'; // Import the new query slice
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     stocks: stockReducer,
     table: tableReducer,
      screen: screenReducer, 
+    query: queryReducer,
   },
 });
 

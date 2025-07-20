@@ -14,23 +14,49 @@ interface ChatMessage {
   content: string;
 }
 
+const LOCAL_STORAGE_KEY = 'chat_history';
+
 const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
   const dispatch = useDispatch();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isResponding, setIsResponding] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
 
+  // ✅ Load chat from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as ChatMessage[];
+        setMessages(parsed);
+      } catch (e) {
+        console.error('Invalid localStorage data', e);
+      }
+    }
+  }, []);
+
+  // ✅ Scroll to bottom when messages update
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages]);
 
+  // ✅ Helper to update messages AND localStorage
+  const addMessage = (msg: ChatMessage) => {
+    setMessages((prev) => {
+      const updated = [...prev, msg].slice(-10); // Only last 10
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const handleSend = useCallback(
     async (prompt: string) => {
       if (!prompt.trim()) return;
 
-      setMessages((prev) => [...prev, { sender: 'user', content: prompt }]);
+      const userMessage: ChatMessage = { sender: 'user', content: prompt };
+      addMessage(userMessage);
       setIsResponding(true);
 
       try {
@@ -45,9 +71,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
               const json = JSON.parse(line.replace('data: ', ''));
 
               if (json.action_type === 'screen_stock' && json.query) {
-                // ✅ Save to local history
                 saveQueryToLocalHistory(json.stream_id || Date.now().toString(), json.query);
-
                 dispatch(
                   setStockParams({
                     query: json.query,
@@ -66,16 +90,16 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
           }
         }
 
-        setMessages((prev) => [
-          ...prev,
-          { sender: 'ai', content: fullResponse.trim() || '❌ No response.' },
-        ]);
+        addMessage({
+          sender: 'ai',
+          content: fullResponse.trim() || '❌ No response.',
+        });
       } catch (err) {
         console.error('❌ Error getting response:', err);
-        setMessages((prev) => [
-          ...prev,
-          { sender: 'ai', content: '❌ AI failed to respond.' },
-        ]);
+        addMessage({
+          sender: 'ai',
+          content: '❌ AI failed to respond.',
+        });
       } finally {
         setIsResponding(false);
       }
@@ -85,10 +109,7 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
 
   return (
     <div className="flex flex-col h-full relative bg-base-200">
-      <div
-        ref={chatRef}
-        className="flex-1 overflow-y-auto p-4 space-y-3 pb-28 scroll-smooth"
-      >
+      <div ref={chatRef} className="flex-1 overflow-y-auto p-4 space-y-3 pb-28 scroll-smooth">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -101,34 +122,16 @@ const ChatPage = ({ firebaseIdToken }: { firebaseIdToken: string }) => {
             <div className="font-semibold mb-2">
               {msg.sender === 'user' ? '🧑‍💼 You:' : '🤖 AI:'}
             </div>
-
             {msg.sender === 'ai' ? (
               <div className="prose prose-sm max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    ul: (props) => (
-                      <ul
-                        className="list-disc list-inside space-y-1 text-sm"
-                        {...props}
-                      />
-                    ),
-                    ol: (props) => (
-                      <ol
-                        className="list-decimal list-inside space-y-1 text-sm"
-                        {...props}
-                      />
-                    ),
+                    ul: (props) => <ul className="list-disc list-inside space-y-1 text-sm" {...props} />,
+                    ol: (props) => <ol className="list-decimal list-inside space-y-1 text-sm" {...props} />,
                     li: (props) => <li className="ml-2" {...props} />,
-                    strong: (props) => (
-                      <strong
-                        className="font-semibold text-gray-900"
-                        {...props}
-                      />
-                    ),
-                    p: (props) => (
-                      <p className="mb-2 text-sm text-gray-700" {...props} />
-                    ),
+                    strong: (props) => <strong className="font-semibold text-gray-900" {...props} />,
+                    p: (props) => <p className="mb-2 text-sm text-gray-700" {...props} />,
                   }}
                 >
                   {msg.content}

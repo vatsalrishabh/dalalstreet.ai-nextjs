@@ -9,7 +9,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-import StockTable from '@/components/laptop/StockTable';
+// import StockTable from '@/components/laptop/StockTable';
 import ChatPage from '@/components/laptop/ChatPage';
 import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
 import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
@@ -21,6 +21,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
 import { setScreen } from '@/store/redux/slices/screenSlice';
 import { ArrowLeft } from 'lucide-react';
+import AGridTable from '@/components/aggridtable/AGridTable';
+
+
+
+
+
 
 export default function MainResponsivePage() {
   const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
@@ -59,12 +65,18 @@ export default function MainResponsivePage() {
               <div className="h-full bg-base-200 border-r border-base-300 rounded-l-xl shadow-inner p-4">
                 <h2 className="text-xl font-semibold mb-4">📈 Stock Table</h2>
                 {firebaseIdToken && (
-                  <StockTable
+                  <AGridTable
                     firebaseIdToken={firebaseIdToken}
                     query={query}
                     title={title}
                     count={count}
                   />
+                  // <StockTable
+                  //   firebaseIdToken={firebaseIdToken}
+                  //   query={query}
+                  //   title={title}
+                  //   count={count}
+                  // />
                 )}
               </div>
             </Panel>
@@ -105,12 +117,18 @@ export default function MainResponsivePage() {
       {/* Smartphone View */}
       <div className="lg:hidden px-4 py-4 min-h-screen space-y-6">
         {currentScreen === 'charts' && firebaseIdToken && (
-          <StockTable
-            firebaseIdToken={firebaseIdToken}
-            query={query}
-            title={title}
-            count={count}
-          />
+          // <StockTable
+          //   firebaseIdToken={firebaseIdToken}
+          //   query={query}
+          //   title={title}
+          //   count={count}
+          // />
+          <AGridTable
+                    firebaseIdToken={firebaseIdToken}
+                    query={query}
+                    title={title}
+                    count={count}
+                  />
         )}
 
         {currentScreen === 'chatbot' && firebaseIdToken && (

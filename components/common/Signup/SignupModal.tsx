@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import googlelogo from '@/assets/logo/googlelogo.webp';
-import { initiateGoogleOAuth } from '@/services/authService';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { initiateGoogleOAuth } from '@/services/authService'; //1. custom
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logout } from '@/store/redux/slices/authSlice';
+import { login, logout } from '@/store/redux/slices/authSlice'; //2. redux + localStorage
 import { clearAuthFromLocalStorage } from '@/middleware/localStorage/authMiddleware';
 import '@/firebase/config';
 import { RootState } from '@/store/redux/store';
@@ -33,11 +33,12 @@ const SignupModal: React.FC = () => {
     try {
       const auth = getAuth();
       const provider = new GoogleAuthProvider(); 
-      console.log(provider)
       const result = await signInWithPopup(auth, provider);
+      
       const firebaseUser = result.user;
       const token = await firebaseUser.getIdToken();
-      const results = await initiateGoogleOAuth(token);
+      const results = await initiateGoogleOAuth(token); // 3. custom API call
+
 
       const { uid, email, phone_number, credits } = results.data;
       const userName = firebaseUser.displayName || '';
@@ -61,6 +62,9 @@ const SignupModal: React.FC = () => {
       setLoading(false);
     }
   };
+
+  
+ 
 
   return (
     <>

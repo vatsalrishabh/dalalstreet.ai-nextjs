@@ -1,13 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { getQueryHistory, saveQueryToLocalHistory } from '@/lib/lastQueryLocal';
+import { useDispatch } from 'react-redux';
+import { setLatestQuery } from '@/store/redux/slices/querySlice';
 
 const LeftBadgeTwo = () => {
+  const dispatch = useDispatch();
   const [query, setQuery] = useState('');
   const [result, setResult] = useState<string | null>(null);
 
+  // Load last query on mount
+  useEffect(() => {
+    const history = getQueryHistory();
+
+      setQuery(history[0].query);
+        dispatch(setLatestQuery(query));
+      setResult(`🟢 Last Executed:\n${history[0].query}`);
+
+  }, []);
+
   const handleRunQuery = () => {
+    if (!query.trim()) return;
+
+    // You can generate a dummy stream_id or from context
+    const stream_id = Date.now().toString();
+    saveQueryToLocalHistory(stream_id, query);
     setResult(`🟢 Executed:\n${query}`);
   };
 
