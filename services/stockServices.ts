@@ -1,8 +1,10 @@
 //services/stockServices.ts
-import api from '@/lib/api';
+import api from '@/lib/api';  // basically to fetch the data for the table 
+// it will have a default case and then based upon user input --> llm response will be used to fetch the data
 
+// fuction with axios and parameters to fetch the data
 export const getStockScreenResults = async (
-  token: string,
+  token: string, // randomly generated chat token to distinguish chat 
   query: string = 'market_capitalization > 10000',
   page: number = 1,
   limit: number = 50

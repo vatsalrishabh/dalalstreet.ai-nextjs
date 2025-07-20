@@ -11,7 +11,8 @@ import { useRef, useState } from 'react';
 
 import StockTable from '@/components/laptop/StockTable';
 import ChatPage from '@/components/laptop/ChatPage';
-import Navbar from '@/components/common/Navbar/Navbar';
+//import Navbar from '@/components/common/Navbar/Navbar';
+import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 import LeftBadgeOne from '@/components/common/Drawer/LeftBadgeOne';
 import LeftBadgeTwo from '@/components/common/Drawer/LeftBadgeTwo';
 
@@ -22,7 +23,7 @@ import type { RootState } from '@/store/redux/store';
 
 export default function Dashboard() {
   // const theme = useSelector((state: RootState) => state.theme.mode);
-  const firebaseIdToken = useSelector((state: RootState) => state.auth.token);
+  const firebaseIdToken = useSelector((state: RootState) => state.auth.token); // from the state
   const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
 
@@ -35,7 +36,8 @@ export default function Dashboard() {
 console.log(firebaseIdToken)
   return (
     <div  className="Main-all-App">
-      <Navbar />
+      {/* <Navbar /> */}
+      <DaisyNavbar/>
       <LeftBadgeOne />
       <LeftBadgeTwo />
 
@@ -53,6 +55,7 @@ console.log(firebaseIdToken)
     title="Top Performing Stocks"
     firebaseIdToken={firebaseIdToken}
     count={20}
+    query="top-performing" // Provide a suitable query string
   />
 )}
 

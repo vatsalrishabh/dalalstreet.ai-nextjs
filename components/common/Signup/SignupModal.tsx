@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import googlelogo from '@/assets/logo/googlelogo.webp';
-import { initiateGoogleOAuth } from '@/services/authService';
+import { initiateGoogleOAuth } from '@/services/authService'; // function to initiate google auth 
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { login } from '@/store/redux/slices/authSlice';
@@ -11,7 +11,7 @@ import {
   getUserInfoFromLocalStorage,
   persistAuthToLocalStorage,
   clearAuthFromLocalStorage,
-} from '@/middleware/localStorage/authMiddleware';
+} from '@/middleware/localStorage/authMiddleware';// localstorage functions to clear login data 
 import '@/firebase/config';
 import { BackendUser } from '@/types/auth';
 
@@ -38,7 +38,7 @@ const SignupModal: React.FC = () => {
   const handleGoogleSignup = async () => {
     setLoading(true);
     try {
-      const auth = getAuth();
+      const auth = getAuth(); // built in firebase aut
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
