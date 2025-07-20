@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/redux/store';
 
 interface Props {
   onSend: (text: string) => void;
@@ -9,22 +12,35 @@ interface Props {
 }
 
 const ChatInput = ({ onSend, disabled = false }: Props) => {
+  const latestQuery = useSelector((state: RootState) => state.query.latestQuery);
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
+  const hasAutoSent = useRef(false); // ✅ prevent double send
 
+
+  
   useEffect(() => {
-    const query = searchParams.get("query");
-    if (query) {
+    console.log('Latest Query from Redux:', latestQuery);
+    const query = searchParams.get('query');
+
+    if (query && !hasAutoSent.current) {
       setInput(query);
-      // Automatically send after setting input
-      onSend(query.trim());
+      hasAutoSent.current = true; // ✅ ensure this happens only once
     }
-  }, [searchParams]);
+  }, [searchParams,latestQuery]);
 
   const handleSend = () => {
     if (!input.trim() || disabled) return;
     onSend(input.trim());
+    router.push(`/home/?query=${encodeURIComponent(input.trim())}`);
     setInput('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
   };
 
   return (
@@ -36,7 +52,7 @@ const ChatInput = ({ onSend, disabled = false }: Props) => {
         onChange={(e) => setInput(e.target.value)}
         className="input input-bordered w-full"
         disabled={disabled}
-        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+        onKeyDown={handleKeyDown}
       />
       <button
         onClick={handleSend}

@@ -1,6 +1,6 @@
 ## 📁 Project Structure
 
-This project follows a scalable and maintainable structure inspired by enterprise-grade (e.g., MNC/FANG-level) standards:
+This project follows a scalable and maintainable structure inspired by enterprise-grade standards:
 
 ```
 /src

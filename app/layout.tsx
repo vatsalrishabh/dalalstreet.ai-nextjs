@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
 import DaisyUiThemeProvider from "@/providers/DaisyUiThemeProvider";
-import AuthListener from "@/components/common/Signup/AuthListner";
+import SessionHandler from "@/components/common/Signup/SessionHandler";
 import "animate.css";
 
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         
   <ReduxProvider>
     <DaisyUiThemeProvider>
-      <AuthListener/>      {/* automatic logoout if the firebase token expires */}
+      <SessionHandler/>      {/* automatic logoout if the firebase token expires */}
           {children}
           </DaisyUiThemeProvider>
    </ReduxProvider>
