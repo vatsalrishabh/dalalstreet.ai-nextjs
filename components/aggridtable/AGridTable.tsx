@@ -34,7 +34,7 @@ const AGridTable: React.FC<Props> = ({
   query,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data: stocks, loading, error } = useSelector((state: RootState) => state.stocks);
+  const { data: stocks } = useSelector((state: RootState) => state.stocks);
   const [screenTitle, setScreenTitle] = useState(title);
   const [screenDescription, setScreenDescription] = useState('Saved screen from query result');
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -111,9 +111,13 @@ const AGridTable: React.FC<Props> = ({
       });
       alert('✅ Screen saved successfully!');
       dialogRef.current?.close();
-    } catch (error: any) {
-      alert('❌ Failed to save screen. Check console.');
-      console.error(error);
+    } catch (error: unknown) {
+       alert('❌ Failed to save screen. Check console.');
+  if (error instanceof Error) {
+    console.error(error.message);
+  } else {
+    console.error('Unknown error saving screen');
+  }
     }
   };
 
