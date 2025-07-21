@@ -24,6 +24,7 @@ const Navbar: React.FC = () => {
         <Link href="/" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Home</Link>
         <Link href="/screens" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Screens</Link>
         <Link href="/tools" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Tools</Link>
+        <Link href="/payment" className="btn btn-ghost btn-sm rounded-btn text-base font-normal">Payment</Link>
 
         {/* Group: Create Stock Screen */}
         <div className="dropdown dropdown-hover">

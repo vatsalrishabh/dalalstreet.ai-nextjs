@@ -11,6 +11,7 @@ import { clearAuthFromLocalStorage } from '@/middleware/localStorage/authMiddlew
 import '@/firebase/config';
 import { RootState } from '@/store/redux/store';
 import { BackendUser } from '@/types/auth';
+import { useRouter } from 'next/navigation';
 
 import { LogOut, User, Mail, Coins } from 'lucide-react';
 import 'animate.css';
@@ -22,10 +23,12 @@ const SignupModal: React.FC = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
+  const router = useRouter();
 
   const handleLogout = () => {
     clearAuthFromLocalStorage(); // optional if redux logout handles it already
     dispatch(logout());
+    router.push('/');
   };
 
   const handleGoogleSignup = async () => {

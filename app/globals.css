@@ -58,6 +58,16 @@
   --noise: 0;
 }
 
+/* AG Grid DaisyUI theme overrides */
+.ag-theme-quartz {
+  --ag-background-color: var(--color-base-100);
+  --ag-header-background-color: var(--color-base-300);
+  --ag-odd-row-background-color: var(--color-base-200);
+  --ag-row-hover-color: var(--color-accent);
+  --ag-font-color: var(--color-base-content);
+  --ag-border-color: var(--color-base-300);
+  --ag-header-foreground-color: var(--color-base-content);
+}
 
 
 /* Optional: Firefox support */

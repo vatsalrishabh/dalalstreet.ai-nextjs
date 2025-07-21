@@ -47,8 +47,7 @@ const authSlice = createSlice({
 
       // ✅ Safe: runs only in browser
       if (typeof window !== "undefined") {
-        localStorage.removeItem('userDetails');
-        localStorage.removeItem('token');
+        localStorage.clear();
       }
     },
   },

@@ -141,13 +141,13 @@ const AGridTable: React.FC<Props> = ({
           )}
           <button
             onClick={() => columnDialogRef.current?.showModal()}
-            className="bg-gray-100 hover:bg-gray-200 text-sm font-medium px-3 py-1 rounded border"
+            className="btn btn-ghost text-sm font-medium"
           >
             🧩 Select Columns
           </button>
           <button
             onClick={() => dialogRef.current?.showModal()}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition"
+            className="btn btn-primary text-sm font-medium"
           >
             💾 Save Screen
           </button>
@@ -155,7 +155,7 @@ const AGridTable: React.FC<Props> = ({
       </div>
 
       {/* AG Grid Table */}
-      <div className="ag-theme-quartz shadow border border-gray-200 rounded-xl overflow-hidden" style={{ height: 600, width: '100%' }}>
+      <div className="ag-theme-quartz rounded-xl shadow" style={{ height: 600, width: '100%' }}>
         <AgGridReact
           rowData={stocks || []}
           columnDefs={colDefs}

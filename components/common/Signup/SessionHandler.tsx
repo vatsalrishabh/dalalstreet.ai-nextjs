@@ -6,6 +6,7 @@ import { getAuth, onIdTokenChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '@/store/redux/slices/authSlice';
 import { BackendUser } from '@/types/auth';
+import '@/firebase/config';
 
 const SessionHandler = () => {
   const dispatch = useDispatch();

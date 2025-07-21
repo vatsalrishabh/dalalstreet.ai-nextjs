@@ -11,6 +11,7 @@ const navLinks = [
   // { href: "#features", label: "Features" },
   { href: "/home", label: "Home" },
   { href: "/screens", label: "Screens" },
+  { href: "/payment", label: "Payment" },
 ];
 
 const DaisyNavbar = () => {
