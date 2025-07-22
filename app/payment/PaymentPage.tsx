@@ -1,6 +1,13 @@
+'use client';
 import React from 'react';
 import PaymentCard from './PaymentCard';
 import { createOrder } from '@/services/paymentService';
+
+interface RazorpayPaymentResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
 
 const packages = [
   {
@@ -21,7 +28,7 @@ const packages = [
 ];
 
 const PaymentPage: React.FC = () => {
-  const token = localStorage.getItem('token'); // Assumes token is stored here
+  const token = localStorage.getItem('token');
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -51,15 +58,14 @@ const PaymentPage: React.FC = () => {
       const { orderId } = await createOrder(amount, token);
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY, // Replace with actual key
-        amount: amount * 100, // in paise
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY!,
+        amount: amount * 100,
         currency: 'INR',
         name: 'DalalStreet.ai',
         description: 'Payment for DalalStreet.ai Plan',
         order_id: orderId,
-        handler: (response: any) => {
+        handler: (response: RazorpayPaymentResponse) => {
           console.log('Payment successful:', response);
-          // Optional: send response.razorpay_payment_id etc. to backend for verification
         },
         prefill: {
           name: 'Vatsal Rishabh',
@@ -70,7 +76,8 @@ const PaymentPage: React.FC = () => {
         },
       };
 
-      const rzp = new (window as any).Razorpay(options);
+      const Razorpay = (window as typeof window & { Razorpay: any }).Razorpay;
+      const rzp = new Razorpay(options);
       rzp.open();
     } catch (err) {
       console.error('Payment initiation error:', err);

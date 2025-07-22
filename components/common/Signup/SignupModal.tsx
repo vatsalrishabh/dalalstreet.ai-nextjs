@@ -38,7 +38,8 @@ const SignupModal: React.FC = () => {
       const firebaseUser = result.user;
       const token = await firebaseUser.getIdToken();
       const results = await initiateGoogleOAuth(token); // 3. custom API call
-
+      console.log(results)
+      console.log(token)
 
       const { uid, email, phone_number, credits } = results.data;
       const userName = firebaseUser.displayName || '';
