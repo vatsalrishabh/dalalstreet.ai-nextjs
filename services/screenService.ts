@@ -12,6 +12,7 @@ export const saveScreen = async (
         title: string;
         description: string;
         screen_query: string;
+        columns?: string[];
     }
     ): Promise<string> => {
     try {

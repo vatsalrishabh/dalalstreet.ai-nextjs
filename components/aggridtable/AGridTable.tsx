@@ -108,12 +108,14 @@ const AGridTable: React.FC<Props> = ({
     return sorted.filter((col) => visibleColumns[col.field as string]);
   }, [allColumns, visibleColumns]);
 
+
   const handleSave = async () => {
     try {
       await saveScreen(firebaseIdToken, {
         title: screenTitle,
         description: screenDescription,
         screen_query: query,
+        columns: []
       });
     
       toast.success('Screen saved successfully!');

@@ -16,6 +16,10 @@ const SessionHandler = () => {
     const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const token = await firebaseUser.getIdToken(); // auto-refreshes if expired
+        const tokenFromLocalStorage = localStorage.getItem('token');
+        if (token !== tokenFromLocalStorage) {
+          localStorage.setItem('token', token);
+        }
         const userDetails: BackendUser = {
           uid: firebaseUser.uid,
           email: firebaseUser.email || '',
