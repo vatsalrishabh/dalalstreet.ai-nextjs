@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '@/store/redux/store';
 import { setStockParams } from '@/store/redux/slices/tableSlice';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 interface ScreenProps {
   title: string;
@@ -59,7 +60,7 @@ export default function Screen({
 
   const handleDelete = async () => {
     if (!token) {
-      alert('⚠️ Please log in to delete screens.');
+      toast.error('Please log in to delete screens.');
       return;
     }
 
@@ -69,11 +70,11 @@ export default function Screen({
     try {
       setIsDeleting(true);
       await deleteScreen(token, screen_query);
-      alert('✅ Screen deleted successfully!');
+      toast.success('Screen deleted successfully!');
       if (onDelete) onDelete();
     } catch (err) {
       console.error('❌ Error deleting screen:', err);
-      alert('Failed to delete screen. Check console.');
+      toast.error('Failed to delete screen. Check console.');
     } finally {
       setIsDeleting(false);
     }

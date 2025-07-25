@@ -2,6 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import PaymentCard from './PaymentCard';
 import { createOrder } from '@/services/paymentService';
+import { initiateGoogleOAuth } from '@/services/authService';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { login } from '@/store/redux/slices/authSlice'; // update as per your actual path
+import { BackendUser } from '@/types/auth';
+import {toast} from 'react-toastify';
 
 interface RazorpayPaymentResponse {
   razorpay_order_id: string;
@@ -37,6 +43,7 @@ declare global {
   }
 }
 
+
 const packages = [
   {
     title: 'Trial Pack',
@@ -65,6 +72,7 @@ const packages = [
 
 const PaymentPage: React.FC = () => {
   const [token, setToken] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -86,28 +94,69 @@ const PaymentPage: React.FC = () => {
   const initiatePayment = async (amount: number) => {
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
-      alert('Razorpay SDK failed to load.');
+      toast.error('Razorpay SDK failed to load.');
+      return;
+    }
+
+    const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
+    if (!razorpayKey) {
+      console.error('❌ Razorpay key missing in env vars');
+      toast.error('Payment service not configured. Please try again later.');
       return;
     }
 
     try {
-      if (!token) {
-        alert('User not authenticated.');
-        return;
+      let authToken = token; // first from state which is bring it from localStorage
+
+      // If user is not logged in, sign them in
+      if (!authToken) {
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const firebaseUser = result.user;
+        authToken = await firebaseUser.getIdToken();
+        localStorage.setItem('token', authToken);
       }
 
-      const orderId = await createOrder(amount, token);
-      console.log('Order ID:', orderId);
+      const orderId = await createOrder(amount, authToken);
+      console.log('✅ Order ID:', orderId);
 
       const options: RazorpayOptions = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY || '',
-        amount: orderId.amount, // should be in paise
+        key: razorpayKey,
+        amount: orderId.amount, // in paise
         currency: 'INR',
         name: 'DalalStreet.ai',
         description: 'Payment for DalalStreet.ai Plan',
         order_id: orderId.order_id,
-        handler: (response: RazorpayPaymentResponse) => {
-          console.log('Payment successful:', response);
+        handler: async (response: RazorpayPaymentResponse) => {
+          console.log('✅ Payment successful:', response);
+
+          try {
+            if (!authToken) return;
+
+            const userData = await initiateGoogleOAuth(authToken);
+            const { uid, email, phone_number, credits , premium_expiry_date} = userData.data;
+            const firebaseUser = getAuth().currentUser;
+
+            const backendUser: BackendUser = {
+              uid,
+              email,
+              phone_number,
+              credits,
+              userName: firebaseUser?.displayName || '',
+              userDpUrl: firebaseUser?.photoURL || '',
+             premium_expiry_date,
+            };
+
+            dispatch(login({ user: backendUser, token: authToken }));
+            localStorage.setItem('userDetails', JSON.stringify(backendUser));
+            localStorage.setItem('token', authToken);
+            setToken(authToken);
+            toast.success('Payment successful!');
+            window.location.href = '/home'; // Redirect to home or any other page
+          } catch (e) {
+            console.error('❌ Error updating user after payment', e);
+          }
         },
         prefill: {
           name: 'Vatsal Rishabh',
@@ -115,15 +164,16 @@ const PaymentPage: React.FC = () => {
           contact: '1234567890',
         },
         theme: {
-          color: '#FF6A00',
+          color: '#00aa76', // primary green
         },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      console.error('Payment initiation error:', err);
-      alert('Failed to initiate payment');
+      console.error('❌ Payment initiation error:', err);
+      toast.error('Failed to initiate payment. Please try again.');
+     
     }
   };
 

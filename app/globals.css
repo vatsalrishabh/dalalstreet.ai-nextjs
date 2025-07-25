@@ -13,49 +13,50 @@
   /* Tailwind / DaisyUI theme with custom greyscale palette */
 
    /* BACKGROUND COLORS */
-  --color-base-100: #FFF8F1;       /* Hero background, input & table - light orange tint */
-  --color-base-200: #FFE5D0;       /* Screener section, navbar - pastel orange */
-  --color-base-300: #FFB380;       /* Table header row - medium orange */
+/* BACKGROUND COLORS */
+--color-base-100: #0f0f0f;       /* base bg */
+--color-base-200: #1a1a1a;       /* card bg */
+--color-base-300: #222222;       /* border */
+--color-base-content: #f3f3f3;   /* text */
+--color-primary: #00aa76;        /* brand green */
 
-  /* TEXT COLORS */
-  --color-base-content: #3B1F00;   /* Body text, table content - deep brown for contrast */
+      /* CTA, tickers, accent green */
+--color-primary-content: #ffffff; /* Contrast text */
 
-  /* BRAND COLORS */
-  --color-primary: #FF6A00;        /* Logo, CTA button bg, tickers - bright orange */
-  --color-primary-content: #FFFFFF; /* CTA button text - white for contrast */
+/* SECONDARY */
+--color-secondary: #009e60;      /* Muted green */
+--color-secondary-content: #e5e5e5;
 
-  --color-secondary: #FF9F40;      /* Optional secondary - orange muted */
-  --color-secondary-content: #3B1F00; /* Dark brown text */
+/* ACCENT */
+--color-accent: #333333;
+--color-accent-content: #00aa76;
 
-  --color-accent: #FFD8A8;         /* Sample prompts bg - soft peach/orange tint */
-  --color-accent-content: #3B1F00; /* Sample prompt text - dark brown */
+/* NEUTRAL */
+--color-neutral: #1f1f1f;
+--color-neutral-content: #fafafa;
 
-  --color-neutral: #CC5500;        /* Disabled/footer - burnt orange */
-  --color-neutral-content: #FFF8F1; /* Light cream text */
+/* INFO / SUCCESS / WARNING / ERROR (subtle variants) */
+--color-info: #3a8f7d;
+--color-info-content: #e1fdf7;
 
-  --color-info: #FFA94D;           /* Info badges - soft orange */
-  --color-info-content: #3B1F00;   /* Info text - dark brown */
+--color-success: #00aa76;
+--color-success-content: #eafff5;
 
-  --color-success: #FF922B;        /* Success badge - bold orange */
-  --color-success-content: #3B1F00; /* Success text - dark brown */
+--color-warning: #ffaa00;
+--color-warning-content: #2c1f00;
 
-  --color-warning: #FFC078;        /* Warning alerts - mellow orange */
-  --color-warning-content: #3B1F00; /* Warning text - dark brown */
+--color-error: #ff5c5c;
+--color-error-content: #ffe8e8;
 
-  --color-error: #FFD8C2;          /* Error fields - light orange/red blend */
-  --color-error-content: #3B1F00;  /* Error text - dark brown */
+/* Radius / Borders */
+--radius-selector: 0.75rem;
+--radius-field: 0.25rem;
+--radius-box: 0.75rem;
 
-  /* BORDER & EFFECTS */
-  --radius-selector: 1rem;         /* Buttons */
-  --radius-field: 0.25rem;         /* Input fields */
-  --radius-box: 0.5rem;            /* Card/table box */
+--border: 1px;
+--depth: 2;
+--noise: 0.02;
 
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-
-  --border: 1px;
-  --depth: 1;
-  --noise: 0;
 }
 
 

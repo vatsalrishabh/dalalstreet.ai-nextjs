@@ -35,10 +35,10 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
 
       // ✅ Safe: runs only in browser
-      if (typeof window !== "undefined") {
-        localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
-        localStorage.setItem('token', action.payload.token);
-      }
+      // if (typeof window !== "undefined") {
+      //   localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
+      //   localStorage.setItem('token', action.payload.token);
+      // }
     },
     logout(state) {
       state.user = null;

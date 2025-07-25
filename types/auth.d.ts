@@ -6,4 +6,5 @@ export interface BackendUser {
   credits: number;
    userName: string;
   userDpUrl: string;
+  premium_expiry_date?: string | null; // Optional, if your backend provides it
 }

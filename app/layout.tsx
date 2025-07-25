@@ -5,8 +5,9 @@ import ReduxProvider from "@/providers/ReduxProvider";
 import DaisyUiThemeProvider from "@/providers/DaisyUiThemeProvider";
 import SessionHandler from "@/components/common/Signup/SessionHandler";
 import "animate.css";
-
-
+import GoogleOAuth from "@/providers/GoogleOAuth";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,14 +31,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        
-  <ReduxProvider>
-    <DaisyUiThemeProvider>
-      <SessionHandler/>      {/* automatic logoout if the firebase token expires */}
-          {children}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ReduxProvider>
+          <DaisyUiThemeProvider>
+            <GoogleOAuth>
+            <SessionHandler />   {/* automatic logoout if the firebase token expires */}
+               <ToastContainer position="top-right" autoClose={3000} />
+            {children}
+            </GoogleOAuth>
           </DaisyUiThemeProvider>
-   </ReduxProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

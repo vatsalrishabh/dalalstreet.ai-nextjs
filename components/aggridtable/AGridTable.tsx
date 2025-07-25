@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { AgGridReact } from 'ag-grid-react';
 import { ColDef, ModuleRegistry, ValueFormatterParams } from 'ag-grid-community';
 import { AllCommunityModule } from 'ag-grid-community';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,8 +9,11 @@ import { fetchStocks } from '@/store/redux/slices/stockSlice';
 import { saveScreen } from '@/services/screenService';
 import { X } from 'lucide-react';
 
+import { AgGridReact } from 'ag-grid-react';
+import { agGridCustomTheme } from '@/theme/agGridCustomTheme';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
+import { toast } from 'react-toastify';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -21,6 +23,10 @@ type Props = {
   firebaseIdToken: string;
   query: string;
 };
+interface AgGridTheme {
+  addToDocument?: () => void;
+}
+
 
 const formatNumber = (num: number | string | null | undefined): string => {
   const parsed = typeof num === 'number' ? num : parseFloat(String(num));
@@ -109,10 +115,11 @@ const AGridTable: React.FC<Props> = ({
         description: screenDescription,
         screen_query: query,
       });
-      alert('✅ Screen saved successfully!');
+    
+      toast.success('Screen saved successfully!');
       dialogRef.current?.close();
     } catch (error: unknown) {
-       alert('❌ Failed to save screen. Check console.');
+      toast.error('Failed to save screen. Check console.');
   if (error instanceof Error) {
     console.error(error.message);
   } else {
@@ -127,6 +134,15 @@ const AGridTable: React.FC<Props> = ({
       [field]: field === 'name' ? true : !prev[field],
     }));
   };
+
+   const gridRef = useRef<AgGridReact>(null);
+
+useEffect(() => {
+  if (gridRef.current) {
+    (agGridCustomTheme as AgGridTheme).addToDocument?.(); // inject theme CSS variables
+  }
+}, []);
+
 
   return (
     <div className="space-y-6 p-4">
@@ -157,6 +173,7 @@ const AGridTable: React.FC<Props> = ({
       {/* AG Grid Table */}
       <div className="ag-theme-quartz shadow border border-gray-200 rounded-xl overflow-hidden" style={{ height: 600, width: '100%' }}>
         <AgGridReact
+        ref={gridRef}
           rowData={stocks || []}
           columnDefs={colDefs}
           defaultColDef={defaultColDef}
