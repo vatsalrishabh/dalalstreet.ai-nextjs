@@ -26,6 +26,8 @@ const SessionHandler = () => {
         };
 
         dispatch(login({ user: userDetails, token }));
+        localStorage.setItem('token', token);
+        localStorage.setItem('userDetails', JSON.stringify(userDetails));
       } else {
         dispatch(logout());
       }
