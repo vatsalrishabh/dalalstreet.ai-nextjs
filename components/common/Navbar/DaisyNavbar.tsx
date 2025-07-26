@@ -36,7 +36,7 @@ const DaisyNavbar = () => {
       <div className="navbar bg-base-100 shadow-sm px-4 sm:px-6">
         {/* Left: Logo */}
         <div className="flex-1">
-          <Link href="/" className="text-xl sm:text-2xl font-bold text-primary">
+          <Link href="/" className="text-xl sm:text-2xl font-bold text-white ">
             <Typewriter
               words={words}
               loop
