@@ -1,7 +1,7 @@
 import React from 'react';
 
 type StockTableProps = {
-  theme: any;
+ theme: { [key: string]: string };
   visibleColumnsList: { key: string; label: string }[];
   visibleColumns: Record<string, boolean>;
   sortedStockData: any[];

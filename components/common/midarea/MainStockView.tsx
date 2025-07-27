@@ -241,7 +241,7 @@ const handleSaveScreen = async () => {
         <StockTable
           theme={activeTheme}
           visibleColumnsList={Object.entries(visibleColumns)// {name :boolean,name: boolean}
-            .filter(([_, visible]) => visible)
+            .filter(([ visible]) => visible)
             .map(([key]) => ({ key, label: key }))}
           visibleColumns={visibleColumns}
          sortedStockData={allStocks?.slice(0, 50) || []} // replace with your actual data
