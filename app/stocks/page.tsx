@@ -4,25 +4,25 @@ import React, { useState } from 'react';
 import themes from '@/components/tablet/theme';
 import MainStockView from '@/components/common/midarea/MainStockView';
 import RightPanel from '@/components/common/RightArea/RightPanel';
-import { useDispatch } from 'react-redux';
-import { setActivePanel as setActivePanelRedux } from '@/store/redux/slices/uiSlice';
+// import { useDispatch } from 'react-redux';
+// import { setActivePanel as setActivePanelRedux } from '@/store/redux/slices/uiSlice';
 import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 
 const Page = () => {
-  const [currentTab, setCurrentTab] = useState('explore');
+  const [currentTab ] = useState('explore');
   const [activePanel, setActivePanel] = useState<string | null>('screener');
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [queryBuilderQuery, setQueryBuilderQuery] = useState<any>(null);
   const [filters, setFilters] = useState<any>([]);
 
   const activeTheme = themes['matte-black'];
 
-  const togglePanel = (panel: string) => {
-    const newPanel = panel === activePanel ? null : panel;
-    setActivePanel(newPanel);
-    dispatch(setActivePanelRedux(newPanel));
-  };
+  // const togglePanel = (panel: string) => {
+  //   const newPanel = panel === activePanel ? null : panel;
+  //   setActivePanel(newPanel);
+  //   dispatch(setActivePanelRedux(newPanel));
+  // };
 
   return (
     <>
