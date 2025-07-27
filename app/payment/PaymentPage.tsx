@@ -119,7 +119,7 @@ const PaymentPage: React.FC = () => {
       }
 
       const orderId = await createOrder(amount, authToken);
-      console.log('✅ Order ID:', orderId);
+  
 
       const options: RazorpayOptions = {
         key: razorpayKey,
@@ -129,7 +129,7 @@ const PaymentPage: React.FC = () => {
         description: 'Payment for DalalStreet.ai Plan',
         order_id: orderId.order_id,
         handler: async (response: RazorpayPaymentResponse) => {
-          console.log('✅ Payment successful:', response);
+      
 
           try {
             if (!authToken) return;

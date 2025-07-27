@@ -21,11 +21,15 @@ const StockTable: React.FC<StockTableProps> = ({
   formatValue,
   formatChange
 }) => {
+
+
+  console.log(visibleColumnsList) // th : th
+
   return (
     <div className={`${theme.surface} rounded-2xl overflow-hidden`}>
-      <div className="h-96 overflow-auto">
+      <div className="lg:h-[70vh] overflow-auto">
         <table className="w-full min-w-max">
-          <thead className="sticky top-0 z-10">
+          <thead className="sticky top-0 ">
             <tr className={`${theme.header}`}>
               {visibleColumnsList.map(col => (
                 <th
@@ -43,52 +47,21 @@ const StockTable: React.FC<StockTableProps> = ({
               ))}
             </tr>
           </thead>
-          <tbody>
-            {Array.from({ length: 20 }, (_, repeatIndex) =>
-              sortedStockData.map((stock, index) => (
-                <tr
-                  key={`${stock.stock}-${repeatIndex}-${index}`}
-                  className={`transition-colors hover:${theme.surfaceHover} group`}
-                >
-                  {visibleColumns.srNo && (
-                    <td className={`px-6 py-4 ${theme.textMuted} text-sm font-mono whitespace-nowrap`}>
-                      {repeatIndex * sortedStockData.length + index + 1}
-                    </td>
-                  )}
-                  {visibleColumns.stock && (
-                    <td className="px-6 py-4 font-medium text-base whitespace-nowrap">{stock.stock}</td>
-                  )}
-                  {visibleColumns.exchange && (
-                    <td className={`px-6 py-4 ${theme.textMuted} text-sm font-mono whitespace-nowrap`}>{stock.exchange}</td>
-                  )}
-                  {visibleColumns.value && (
-                    <td className="px-6 py-4 font-semibold whitespace-nowrap">₹{formatValue(stock.value)}</td>
-                  )}
-                  {visibleColumns.change && (
-                    <td className="px-6 py-4 whitespace-nowrap">{formatChange(stock.change, stock.changePercent)}</td>
-                  )}
-                  {visibleColumns.open && (
-                    <td className={`px-6 py-4 ${theme.textMuted} whitespace-nowrap`}>₹{formatValue(stock.open)}</td>
-                  )}
-                  {visibleColumns.high && (
-                    <td className={`px-6 py-4 ${theme.textMuted} whitespace-nowrap`}>₹{formatValue(stock.high)}</td>
-                  )}
-                  {visibleColumns.low && (
-                    <td className={`px-6 py-4 ${theme.textMuted} whitespace-nowrap`}>₹{formatValue(stock.low)}</td>
-                  )}
-                  {visibleColumns.volume && (
-                    <td className={`px-6 py-4 ${theme.textMuted} font-mono text-sm whitespace-nowrap`}>{stock.volume}</td>
-                  )}
-                  {visibleColumns.marketCap && (
-                    <td className={`px-6 py-4 ${theme.textMuted} font-mono text-sm whitespace-nowrap`}>{stock.marketCap}</td>
-                  )}
-                  {visibleColumns.peRatio && (
-                    <td className={`px-6 py-4 ${theme.textMuted} font-mono text-sm whitespace-nowrap`}>{stock.peRatio}</td>
-                  )}
-                </tr>
-              ))
-            )}
-          </tbody>
+        <tbody>
+  {sortedStockData.map((stock, index) => (
+    <tr key={`${stock.bse_code}-${index}`} className={`transition-colors hover:${theme.surfaceHover} group`}>
+      {visibleColumnsList.map(({ key }) => {
+        if (!visibleColumns[key]) return null;
+        return (
+          <td key={key} className={`px-6 py-4 ${theme.textMuted} whitespace-nowrap`}>
+            {stock[key] ?? '—'}
+          </td>
+        );
+      })}
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
     </div>

@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getStockScreenResults } from '@/services/stockServices';
-import { StockRaw } from '@/models/stock.model';
+// import { StockRaw } from '@/models/stock.model';
+import { StockItem } from '@/types/stockScreensResponse';
 
 interface StockState {
-  data: StockRaw[];
+  data: [StockItem[]];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: StockState = {
-  data: [],
+  data: [[]],
   loading: false,
   error: null,
 };
@@ -19,6 +20,7 @@ export const fetchStocks = createAsyncThunk(
   async ({ token, query }: { token: string; query: string }, thunkAPI) => {
     try {
       const res = await getStockScreenResults(token, query);
+      console.log(res.data)
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err?.response?.data?.message || 'Error fetching stocks');

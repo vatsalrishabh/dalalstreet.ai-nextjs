@@ -17,13 +17,13 @@ export default function Page() {
   const handleSample = (text: string) => {
     setQuery(text);
     if (text) {
-      router.push(`/home/?query=${encodeURIComponent(text)}`);
+      router.push(`/stocks/?query=${encodeURIComponent(text)}`);
     }
   };
 
   const startScreening = () => {
     if (query.trim()) {
-      router.push(`/home/?query=${encodeURIComponent(query.trim())}`);
+      router.push(`/stocks/?query=${encodeURIComponent(query.trim())}`);
     }
   };
 

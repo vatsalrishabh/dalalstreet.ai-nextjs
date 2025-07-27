@@ -37,9 +37,15 @@ When a user visits **[dalastreet.ai](https://dalastreet.ai)**, the application w
 3. **Layout Wrapping**:
    - The `layout.tsx` acts as a global wrapper where:
      ```tsx
-     <GoogleOAuthProvider>
-       {children}
-     </GoogleOAuthProvider>
+  <ReduxProvider>
+          <DaisyUiThemeProvider>
+            <GoogleOAuth>
+            <SessionHandler />   {/* automatic logoout if the firebase token expires */}
+               <ToastContainer position="top-right" autoClose={3000} />
+            {children}
+            </GoogleOAuth>
+          </DaisyUiThemeProvider>
+        </ReduxProvider>
      ```
 
 ---
@@ -80,10 +86,15 @@ When a user visits **[dalastreet.ai](https://dalastreet.ai)**, the application w
 - This ensures **global session monitoring**, seamless **auto-refresh of expired tokens**, and consistent **Redux/localStorage sync** for authenticated state.
 
 ```tsx
-// layout.tsx
-<GoogleOAuthProvider>
-  <SessionHandler />
- {children}
-</GoogleOAuthProvider>
-
+```
+ <ReduxProvider>
+          <DaisyUiThemeProvider>
+            <GoogleOAuth>
+            <SessionHandler />   {/* automatic logoout if the firebase token expires */}
+               <ToastContainer position="top-right" autoClose={3000} />
+            {children}
+            </GoogleOAuth>
+          </DaisyUiThemeProvider>
+        </ReduxProvider>
+```
 

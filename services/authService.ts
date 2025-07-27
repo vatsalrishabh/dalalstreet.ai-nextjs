@@ -1,14 +1,16 @@
 // /src/services/authService.ts
 import api from "@/lib/api"; // the custom api which we made
+import { LoginResponse } from "@/types/loginApiResponse";
+
 
 
 
 // @hit- /api/v1/auth/login        {Content-Type}
 //method - 
 //access - users
-export const initiateGoogleOAuth = (firebaseIdToken: string) => {
+export const initiateGoogleOAuth = (firebaseIdToken: string):Promise<{data:LoginResponse}> => {
   return api.post(
-   `${process.env.NEXT_PUBLIC_Base_URL}/api/v1/auth/login`,
+   `/api/v1/auth/login`,
     {}, // no body needed, unless your backend expects it
     {
       headers: {

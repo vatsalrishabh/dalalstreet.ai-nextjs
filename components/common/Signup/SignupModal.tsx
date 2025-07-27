@@ -9,7 +9,7 @@ import { login, logout } from '@/store/redux/slices/authSlice';
 import { clearAuthFromLocalStorage } from '@/middleware/localStorage/authMiddleware';
 import { RootState } from '@/store/redux/store';
 import { BackendUser } from '@/types/auth';
-import { initiateGoogleOAuth } from '@/services/authService';
+import { initiateGoogleOAuth } from '@/services/authService'; // custom api for login
 import { LogOut, User, Mail, Coins, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'animate.css';
@@ -57,6 +57,7 @@ const SignupModal: React.FC = () => {
       const token = await firebaseUser.getIdToken();
 
       const response = await initiateGoogleOAuth(token); // custom backend API
+      console .log('Login response:', response);
       const { uid, email, phone_number, credits, premium_expiry_date } = response.data;
 
       const userName = firebaseUser.displayName || '';

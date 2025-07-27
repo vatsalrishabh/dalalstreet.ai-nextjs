@@ -9,16 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mui/material": "^7.2.0",
     "@reduxjs/toolkit": "^2.8.2",
     "ag-grid-community": "^34.0.2",
     "ag-grid-react": "^34.0.2",
     "animate.css": "^4.1.1",
     "axios": "^1.10.0",
+    "dompurify": "^3.2.6",
     "event-source-polyfill": "^1.0.31",
     "firebase": "^11.10.0",
     "framer-motion": "^12.23.3",
     "install": "^0.13.0",
     "lucide-react": "^0.525.0",
+    "marked": "^16.1.1",
     "next": "15.3.4",
     "next-auth": "^4.24.11",
     "npm": "^11.4.2",
@@ -34,7 +37,8 @@
     "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11",
     "remark-gfm": "^4.0.1",
-    "tailwind-scrollbar": "^4.0.2"
+    "tailwind-scrollbar": "^4.0.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

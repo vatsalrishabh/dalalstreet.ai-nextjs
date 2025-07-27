@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/redux/store';
 import ResizableDivider from '@/components/common/RightArea/ResizableDivider';
 import QueryPanel from './QueryPanel';
@@ -7,14 +7,13 @@ import FilterPanel from './FilterPanel';
 import ChatPanel from './ChatPanel';
 import ExtraPanel from './ExtraPanel';
 import theme from '@/components/tablet/theme';
+import { setActivePanel  } from '@/store/redux/slices/uiSlice';
 
 type RightPanelProps = {
   queryBuilderQuery: any;
   setQueryBuilderQuery: (query: any) => void;
   filters: any;
   setFilters: (filters: any) => void;
-  setActivePanel: (panel: string | null) => void;
-
 };
 
 const RightPanel: React.FC<RightPanelProps> = ({
@@ -22,50 +21,52 @@ const RightPanel: React.FC<RightPanelProps> = ({
   setQueryBuilderQuery,
   filters,
   setFilters,
-  setActivePanel,
 }) => {
-  const { activePanel, panelWidth,  } = useSelector(
-    (state: RootState) => state.ui
-  );
+  const dispatch = useDispatch();
+  const { activePanel, panelWidth } = useSelector((state: RootState) => state.ui);
 
   if (!activePanel) return null;
 
-  const currentTheme = theme['matte-black']; // fallback if undefined
+  const currentTheme = theme['matte-black'];
+
+  const handleSetActivePanel = (panel: string | null) => {
+    dispatch(setActivePanel(panel));
+  };
 
   return (
     <>
       <ResizableDivider />
       <div
-        className={`${currentTheme.surface} ${currentTheme.border} border-l h-screen overflow-hidden flex-shrink-0`}
+        className={`${currentTheme.surface} ${currentTheme.border} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
         style={{ width: `${panelWidth}px` }}
       >
         {activePanel === 'query' && (
-<QueryPanel
-    queryBuilderQuery={queryBuilderQuery}
-    setQueryBuilderQuery={setQueryBuilderQuery}
-    setActivePanel={setActivePanel}
-    theme={currentTheme}
-  />
+          <QueryPanel
+            queryBuilderQuery={queryBuilderQuery}
+            setQueryBuilderQuery={setQueryBuilderQuery}
+            setActivePanel={handleSetActivePanel}
+            theme={currentTheme}
+          />
         )}
         {activePanel === 'filters' && (
-           <FilterPanel
-    filters={filters}
-    setFilters={setFilters}
-    setActivePanel={setActivePanel}
-    theme={currentTheme}
-  />
+          <FilterPanel
+            filters={filters}
+            setFilters={setFilters}
+          />
         )}
         {activePanel === 'chat' && (
           <ChatPanel
             activePanel={activePanel}
-            setActivePanel={setActivePanel}
+            setActivePanel={handleSetActivePanel}
             theme={currentTheme}
           />
         )}
-        {activePanel === 'screener' &&  <ExtraPanel
-    setActivePanel={setActivePanel}
-    theme={currentTheme}
-  />}
+        {activePanel === 'screener' && (
+          <ExtraPanel
+            setActivePanel={handleSetActivePanel}
+            theme={currentTheme}
+          />
+        )}
       </div>
     </>
   );

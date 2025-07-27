@@ -13,7 +13,7 @@ export interface StockRaw {
   return_on_capital_employed: number;
   industry_pe: number;
   price_to_book_value: number;
-  bse_code: string;
+  bse_code: number;
   [key: string]: any;
 }
 

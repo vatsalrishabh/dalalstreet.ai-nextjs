@@ -26,28 +26,40 @@ const Page = () => {
 
   return (
     <>
-   <DaisyNavbar/>
-    <div className='lg:flex sm:block h-screen'>
+    <div className='h-[8vh]'>
+<DaisyNavbar/>
+    </div>
+   
+    <div className='lg:flex sm:block lg:h-[92vh] w-full'>
       {/* 1. SidebarNav */}
-      <SidebarNav
+       <div className='lg:w-[4%]'>
+              <SidebarNav
         theme={activeTheme}
         currentTab={currentTab}
         activePanel={activePanel || ''}
-        togglePanel={togglePanel}
+      
       />
+      </div>
+     
 
       {/* 2. Main Table Area */}
-      <MainStockView />
+      <div className={`w-[70%] bg-black`}>
+              <MainStockView />
+      </div>
+
 
       {/* 3. Right Panel Area */}
-      <RightPanel
+      <div className={`w-[26%] bg-black`}>
+            <RightPanel
         queryBuilderQuery={queryBuilderQuery}
         setQueryBuilderQuery={setQueryBuilderQuery}
         filters={filters}
         setFilters={setFilters}
-        setActivePanel={setActivePanel}
-        activePanel={activePanel}
+  
+      
       />
+      </div>
+      
     </div>
 
      </>

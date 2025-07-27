@@ -1,12 +1,17 @@
 import React from 'react';
-import { X } from 'lucide-react';
 
-type Filters = {
+type MarketCapOptions = 'smallcap' | 'midcap' | 'largecap';
+
+interface FilterPanelProps {
+  filters: Filters;
+  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+}
+
+export interface Filters {
   marketCap: {
     smallcap: boolean;
     midcap: boolean;
     largecap: boolean;
-    [key: string]: boolean;
   };
   marketCapRange: {
     min: string;
@@ -16,131 +21,98 @@ type Filters = {
     min: string;
     max: string;
   };
-};
+}
 
-type Theme = {
-  textMuted: string;
-  text: string;
-  accent: string;
-  border: string;
-};
+const FilterPanel: React.FC<FilterPanelProps> = ({ filters, setFilters }) => {
+  const toggleMarketCap = (cap: MarketCapOptions) => {
+    setFilters((prev) => ({
+      ...prev,
+      marketCap: {
+        ...prev.marketCap,
+        [cap]: !prev.marketCap[cap],
+      },
+    }));
+  };
 
-type FiltersPanelProps = {
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  setActivePanel: (panel: string | null) => void;
-  theme: Theme;
-};
+  const handleRangeChange = (
+    key: 'marketCapRange' | 'peRatioRange',
+    minOrMax: 'min' | 'max',
+    value: string
+  ) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        [minOrMax]: value,
+      },
+    }));
+  };
 
-const FilterPanel: React.FC<FiltersPanelProps> = ({
-  filters,
-  setFilters,
-  setActivePanel,
-  theme,
-}) => (
-  <div className="h-full flex flex-col">
-    <div className="flex items-center justify-between p-6 border-b border-gray-800">
-      <h2 className="text-lg font-medium">Filters</h2>
-      <button
-        onClick={() => setActivePanel(null)}
-        className={`${theme.textMuted} hover:${theme.text} transition-colors`}
-      >
-        <X className="w-5 h-5" />
-      </button>
-    </div>
-    <div className="flex-1 p-6 space-y-8">
+  return (
+    <div className="p-6 bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-md mx-auto">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Filter Stocks</h2>
+
       {/* Market Cap Filter */}
-      <div>
-        <label className="block text-sm font-medium mb-4">Market Cap</label>
-        <div className="flex gap-2 mb-4">
-          {['Smallcap', 'Midcap', 'Largecap'].map(cap => (
-            <button
-              key={cap}
-              onClick={() =>
-                setFilters(prev => ({
-                  ...prev,
-                  marketCap: {
-                    ...prev.marketCap,
-                    [cap.toLowerCase()]: !prev.marketCap[cap.toLowerCase()],
-                  },
-                }))
-              }
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                filters.marketCap[cap.toLowerCase()]
-                  ? 'bg-emerald-600 text-white'
-                  : `${theme.accent} ${theme.textMuted} hover:${theme.text}`
-              }`}
-            >
-              {cap}
-            </button>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">Market Cap</h3>
+        <div className="flex flex-col gap-2">
+          {(['smallcap', 'midcap', 'largecap'] as MarketCapOptions[]).map((cap) => (
+            <label key={cap} className="inline-flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filters.marketCap[cap]}
+                onChange={() => toggleMarketCap(cap)}
+                className="form-checkbox h-5 w-5 text-blue-600 transition-all duration-150"
+              />
+              <span className="capitalize text-gray-600">{cap}</span>
+            </label>
           ))}
         </div>
+      </div>
+
+      {/* Market Cap Range */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">Market Cap Range (₹)</h3>
         <div className="flex gap-3">
           <input
-            type="text"
+            type="number"
             placeholder="Min"
-            className={`flex-1 p-3 ${theme.accent} ${theme.border} border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all`}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.marketCapRange.min}
-            onChange={e =>
-              setFilters(prev => ({
-                ...prev,
-                marketCapRange: { ...prev.marketCapRange, min: e.target.value },
-              }))
-            }
+            onChange={(e) => handleRangeChange('marketCapRange', 'min', e.target.value)}
           />
-          <span className={`self-center ${theme.textMuted} text-sm`}>to</span>
           <input
-            type="text"
+            type="number"
             placeholder="Max"
-            className={`flex-1 p-3 ${theme.accent} ${theme.border} border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all`}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.marketCapRange.max}
-            onChange={e =>
-              setFilters(prev => ({
-                ...prev,
-                marketCapRange: { ...prev.marketCapRange, max: e.target.value },
-              }))
-            }
+            onChange={(e) => handleRangeChange('marketCapRange', 'max', e.target.value)}
           />
         </div>
       </div>
 
-      {/* PE Ratio Filter */}
+      {/* PE Ratio Range */}
       <div>
-        <label className="block text-sm font-medium mb-4">PE Ratio</label>
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">P/E Ratio Range</h3>
         <div className="flex gap-3">
           <input
-            type="text"
+            type="number"
             placeholder="Min"
-            className={`flex-1 p-3 ${theme.accent} ${theme.border} border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all`}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.peRatioRange.min}
-            onChange={e =>
-              setFilters(prev => ({
-                ...prev,
-                peRatioRange: { ...prev.peRatioRange, min: e.target.value },
-              }))
-            }
+            onChange={(e) => handleRangeChange('peRatioRange', 'min', e.target.value)}
           />
-          <span className={`self-center ${theme.textMuted} text-sm`}>to</span>
           <input
-            type="text"
+            type="number"
             placeholder="Max"
-            className={`flex-1 p-3 ${theme.accent} ${theme.border} border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all`}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={filters.peRatioRange.max}
-            onChange={e =>
-              setFilters(prev => ({
-                ...prev,
-                peRatioRange: { ...prev.peRatioRange, max: e.target.value },
-              }))
-            }
+            onChange={(e) => handleRangeChange('peRatioRange', 'max', e.target.value)}
           />
         </div>
       </div>
-
-      <button className="text-emerald-400 text-sm hover:text-emerald-300 transition-colors font-medium">
-        + Add Filter
-      </button>
     </div>
-  </div>
-);
+  );
+};
 
 export default FilterPanel;

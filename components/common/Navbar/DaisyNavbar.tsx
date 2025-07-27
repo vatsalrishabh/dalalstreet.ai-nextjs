@@ -6,13 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import SignupModal from "../Signup/SignupModal";
 import ToggleTheme from "../ToggleTheme/ToggleTheme";
+import themes from "@/components/tablet/theme";
 
 const navLinks = [
   // { href: "#features", label: "Features" },
-  { href: "/home", label: "Home" },
+  { href: "/stocks", label: "Home" },
   { href: "/screens", label: "Screens" },
     { href: "/payment", label: "Payments" },
 ];
+
 
 const DaisyNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,7 +35,7 @@ const DaisyNavbar = () => {
   return (
     <>
       {/* Navbar */}
-      <div className="navbar bg-base-100 shadow-sm px-4 sm:px-6">
+      <div className={`navbar  shadow-sm px-4 sm:px-6 ${themes['matte-black'].bg}`}>
         {/* Left: Logo */}
         <div className="flex-1">
           <Link href="/" className="text-xl sm:text-2xl font-bold text-white ">

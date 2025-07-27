@@ -28,6 +28,7 @@ const LoginSignup = () => {
       const response = await initiateGoogleOAuth(token); // call your backend API
 
       const { uid, email, phone_number, credits, premium_expiry_date } = response.data;
+     
 
       const backendUser: BackendUser = {
         uid,

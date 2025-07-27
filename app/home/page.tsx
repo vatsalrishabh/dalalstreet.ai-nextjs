@@ -44,9 +44,7 @@ export default function MainResponsivePage() {
     }
   };
 
-  useEffect(() => {
-    console.log('Firebase ID Token:', firebaseIdToken);
-  }, [firebaseIdToken]);
+
 
   return (
     <div className="Main-all-App min-h-screen bg-base-100 text-base-content">
