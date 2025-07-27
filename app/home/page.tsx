@@ -6,7 +6,7 @@ import {
   PanelResizeHandle,
   ImperativePanelHandle,
 } from 'react-resizable-panels';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 // import StockTable from '@/components/laptop/StockTable';

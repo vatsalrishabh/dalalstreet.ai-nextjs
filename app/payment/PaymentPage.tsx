@@ -129,7 +129,7 @@ const PaymentPage: React.FC = () => {
         description: 'Payment for DalalStreet.ai Plan',
         order_id: orderId.order_id,
         handler: async (response: RazorpayPaymentResponse) => {
-      
+           console.log('🔁 Razorpay response:', response);
 
           try {
             if (!authToken) return;
