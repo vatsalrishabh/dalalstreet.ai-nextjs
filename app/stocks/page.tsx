@@ -10,11 +10,13 @@ import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 
 const Page = () => {
   const [currentTab ] = useState('explore');
-  const [activePanel] = useState<string | null>('screener');
+ const [activePanel] = useState<string | null>('screener');
+
   // const dispatch = useDispatch();
 
-  const [queryBuilderQuery, setQueryBuilderQuery] = useState<any>(null);
-  const [filters, setFilters] = useState<any>([]);
+const [queryBuilderQuery, setQueryBuilderQuery] = useState<Record<string, unknown> | null>(null);
+const [filters, setFilters] = useState<Record<string, unknown>[]>([]);
+
 
   const activeTheme = themes['matte-black'];
 
