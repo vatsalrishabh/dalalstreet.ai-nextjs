@@ -10,7 +10,7 @@ import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 
 const Page = () => {
   const [currentTab ] = useState('explore');
-  const [activePanel, setActivePanel] = useState<string | null>('screener');
+  const [activePanel] = useState<string | null>('screener');
   // const dispatch = useDispatch();
 
   const [queryBuilderQuery, setQueryBuilderQuery] = useState<any>(null);
