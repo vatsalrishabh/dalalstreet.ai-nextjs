@@ -79,8 +79,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ setActivePanel, theme }) => {
         if (data.action_type === 'llm_response' && data.message) {
           message += data.message;
         }
-      } catch (err) {
-        console.warn('Failed to parse LLM line:', line);
+      } catch (_err) {
+        console.warn('Failed to parse LLM line:',_err+ line);
       }
     });
 
