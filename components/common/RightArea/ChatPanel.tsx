@@ -31,7 +31,7 @@ type Message = {
 
 const CHAT_STORAGE_KEY = 'chatMessages';
 
-const ChatPanel: React.FC<ChatPanelProps> = ({ activePanel, setActivePanel, theme }) => {
+const ChatPanel: React.FC<ChatPanelProps> = ({ setActivePanel, theme }) => {
   const dispatch = useDispatch();
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
