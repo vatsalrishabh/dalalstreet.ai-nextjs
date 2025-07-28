@@ -60,6 +60,7 @@ export default function Screen({
           }
         }
       } catch (_err) {
+        console.log(_err)
         console.warn('Failed to parse LLM line:', line);
       }
     });
