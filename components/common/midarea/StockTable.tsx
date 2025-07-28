@@ -1,4 +1,5 @@
 import React from 'react';
+import { StockItem } from '@/types/stockScreensResponse';
 
 
 type StockData = {
@@ -10,7 +11,7 @@ type StockTableProps = {
  theme: { [key: string]: string };
   visibleColumnsList: { key: string; label: string }[];
   visibleColumns: Record<string, boolean>;
-  sortedStockData: StockData[];
+  sortedStockData: StockItem[];
   handleSort: (key: string) => void;
   getSortIcon: (key: string) => string | null;
   formatValue: (val: number) => string;

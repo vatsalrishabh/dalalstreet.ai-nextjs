@@ -59,6 +59,7 @@ export interface StockItem {
   working_capital: number;
   yoy_quarterly_profit_growth: number;
   yoy_quarterly_sales_growth: number;
+   [key: string]: string | number | null | undefined;
 }
 
 export interface StockScreenResponse {
