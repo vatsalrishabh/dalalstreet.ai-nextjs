@@ -6,7 +6,7 @@ import QueryPanel from './QueryPanel';
 import FilterPanel from './FilterPanel';
 import ChatPanel from './ChatPanel';
 // import ExtraPanel from './ExtraPanel';
-import theme from '@/components/tablet/theme';
+import themes from '@/components/tablet/theme';
 import { setActivePanel } from '@/store/redux/slices/uiSlice';
 
 // Replace these with actual types if available
@@ -31,7 +31,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   if (!activePanel) return null;
 
-  const currentTheme = theme['matte-black'];
+  const currentTheme = themes['matte-black'];
 
   const handleSetActivePanel = (panel: string | null) => {
     dispatch(setActivePanel(panel));
