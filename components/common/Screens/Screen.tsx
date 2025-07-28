@@ -8,6 +8,8 @@ import type { RootState } from '@/store/redux/store';
 import { setStockParams } from '@/store/redux/slices/tableSlice';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { getLLMResponse } from '@/services/llmServices';
+import { setLatestQuery } from '@/store/redux/slices/querySlice';
 
 interface ScreenProps {
   title: string;
@@ -25,15 +27,48 @@ export default function Screen({
   timestamp,
   onDelete,
 }: ScreenProps) {
+    const [lastQuery, setLastQuery] = useState<string | null>(null);
   const formattedTime = new Date(timestamp).toLocaleString('en-IN', {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
 
+  const CHAT_STORAGE_KEY="chatMessages";
    const dispatch = useDispatch();
   const router = useRouter();
+   const extractLLMMessage = (response: string) => {
+    const lines = response.split('\n').filter(Boolean);
+    let query = '';
+    let message = '';
 
- const handleQueryClick = () => {
+    lines.forEach((line) => {
+      try {
+        const data = JSON.parse(line.replace(/^data:\s*/, ''));
+        if (data.action_type === 'screen_stock' && data.query) {
+          localStorage.setItem('lastQuery', data.query);
+          query = data.query;
+
+          const storedMessages = localStorage.getItem(CHAT_STORAGE_KEY);
+          if (storedMessages) {
+            const parsedMessages = JSON.parse(storedMessages);
+            if (parsedMessages.length >= 10) {
+              parsedMessages.shift();
+              localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(parsedMessages));
+            }
+          }
+        }
+        if (data.action_type === 'llm_response' && data.message) {
+          message += data.message;
+        }
+      } catch (_err) {
+        console.warn('Failed to parse LLM line:',_err+ line);
+      }
+    });
+
+    return { query, message };
+  };
+     const firebaseIdToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+ const handleQueryClick =async () => {
     dispatch(
       setStockParams({
         title,
@@ -41,7 +76,22 @@ export default function Screen({
         count: 30, // or any specific count you want
       })
     );
-    router.push('/home'); // Navigate to the home page or wherever you want
+    try{
+   if(firebaseIdToken==null) return;
+      const response = await getLLMResponse(firebaseIdToken , screen_query, 'rajsppuii99');
+         const { query, message } = extractLLMMessage(response);
+
+       if (query) {
+              setLastQuery(query);
+              localStorage.setItem('lastQuery', query);
+              dispatch(setLatestQuery(query)); // ✅ Corrected name
+            }
+
+    }catch(error){
+
+    }
+
+    router.push('/stocks'); // Navigate to the home page or wherever you want
   };
 
   const token = useSelector((state: RootState) => state.auth.token);
