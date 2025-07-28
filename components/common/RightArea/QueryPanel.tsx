@@ -22,6 +22,7 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
   const [lastQuery, setLastQuery] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log(lastQuery);
     const latestQuery = localStorage.getItem("lastQuery");
     if (latestQuery) {
       setQueryBuilderQuery(latestQuery);

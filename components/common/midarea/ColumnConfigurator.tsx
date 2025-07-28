@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, ChevronDown, Check, Search } from 'lucide-react';
+import {Theme} from '@/components/tablet/theme';
 
 type ColumnOption = {
   key: string;
@@ -7,7 +8,7 @@ type ColumnOption = {
 };
 
 type ColumnConfiguratorProps = {
-  theme: any;
+  theme: Theme;
   show: boolean;
   toggle: () => void;
   columnOptions: ColumnOption[];

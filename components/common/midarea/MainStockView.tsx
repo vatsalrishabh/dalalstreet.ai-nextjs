@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ColumnConfigurator from './ColumnConfigurator';
 import StockTable from './StockTable';
-import theme from '@/components/tablet/theme';
+import themes, {Theme} from '@/components/tablet/theme';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@/store/redux/store';
@@ -91,7 +91,7 @@ const query = useSelector((state: RootState) => state.query.latestQuery)
   working_capital: true,
 });
 
-  const activeTheme = theme['matte-black']; // or 'matte-black', 'dracula', nord.
+  const activeTheme:Theme = themes['matte-black']; // or 'matte-black', 'dracula', nord.
   console.log('allStocks:', allStocks);
 
 
@@ -144,7 +144,7 @@ useEffect(() => {
   }}
   onSave={async (title, description) => {
     const selectedColumns = Object.entries(visibleColumns)
-      .filter(([_, isVisible]) => isVisible)
+      .filter(([ isVisible]) => isVisible)
       .map(([key]) => key);
 
     try {
