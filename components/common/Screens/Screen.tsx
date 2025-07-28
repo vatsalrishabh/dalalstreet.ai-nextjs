@@ -19,7 +19,6 @@ interface ScreenProps {
   onDelete?: () => void;
 }
 
-
 export default function Screen({
   title,
   description,
@@ -27,19 +26,22 @@ export default function Screen({
   timestamp,
   onDelete,
 }: ScreenProps) {
-    const [lastQuery, setLastQuery] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const token = useSelector((state: RootState) => state.auth.token);
+
   const formattedTime = new Date(timestamp).toLocaleString('en-IN', {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
 
-  const CHAT_STORAGE_KEY="chatMessages";
-   const dispatch = useDispatch();
-  const router = useRouter();
-   const extractLLMMessage = (response: string) => {
+  const CHAT_STORAGE_KEY = 'chatMessages';
+
+  const extractLLMMessage = (response: string) => {
     const lines = response.split('\n').filter(Boolean);
     let query = '';
-    let message = '';
 
     lines.forEach((line) => {
       try {
@@ -57,48 +59,44 @@ export default function Screen({
             }
           }
         }
-        if (data.action_type === 'llm_response' && data.message) {
-          message += data.message;
-        }
       } catch (_err) {
-        console.warn('Failed to parse LLM line:',_err+ line);
+        console.warn('Failed to parse LLM line:', line);
       }
     });
 
-    return { query, message };
+    return { query };
   };
-     const firebaseIdToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
- const handleQueryClick =async () => {
+
+  const handleQueryClick = async () => {
     dispatch(
       setStockParams({
         title,
         query: screen_query,
-        count: 30, // or any specific count you want
+        count: 30,
       })
     );
-    try{
-   if(firebaseIdToken==null) return;
-      const response = await getLLMResponse(firebaseIdToken , screen_query, 'rajsppuii99');
-         const { query, message } = extractLLMMessage(response);
 
-       if (query) {
-              setLastQuery(query);
-              localStorage.setItem('lastQuery', query);
-              dispatch(setLatestQuery(query)); // ✅ Corrected name
-            }
+    const firebaseIdToken =
+      typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!firebaseIdToken) return;
 
-    }catch(error){
+    try {
+      const response = await getLLMResponse(firebaseIdToken, screen_query, 'rajsppuii99');
+      const { query } = extractLLMMessage(response);
 
+      if (query) {
+        localStorage.setItem('lastQuery', query);
+        dispatch(setLatestQuery(query));
+      }
+    } catch {
+      // You may log the error here or show a toast
     }
 
-    router.push('/stocks'); // Navigate to the home page or wherever you want
+    router.push('/stocks');
   };
 
-  const token = useSelector((state: RootState) => state.auth.token);
-  const [copied, setCopied] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent parent click handler
     try {
       await navigator.clipboard.writeText(screen_query);
       setCopied(true);
@@ -108,7 +106,8 @@ export default function Screen({
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent parent click handler
     if (!token) {
       toast.error('Please log in to delete screens.');
       return;
@@ -143,7 +142,6 @@ export default function Screen({
         <h2 className="card-title text-base-content">{title}</h2>
         <p className="text-sm text-base-content">{description}</p>
 
-        {/* Query + Copy Button */}
         <div className="mt-3 px-3 py-2 bg-base-200 rounded-md text-xs font-mono text-base-content flex justify-between items-center gap-2">
           <span className="break-all">{screen_query}</span>
           <button
@@ -155,7 +153,6 @@ export default function Screen({
           </button>
         </div>
 
-        {/* Delete Button - Styled with Hot Color */}
         <div className="flex justify-end mt-4">
           <button
             onClick={handleDelete}
@@ -168,7 +165,6 @@ export default function Screen({
           </button>
         </div>
 
-        {/* Timestamp */}
         <div className="text-right mt-2 text-xs text-base-content/50 italic">
           📅 {formattedTime}
         </div>
