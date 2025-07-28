@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store/redux/store';
 import ResizableDivider from '@/components/common/RightArea/ResizableDivider';
 import QueryPanel from './QueryPanel';
-import FilterPanel from './FilterPanel';
+// import FilterPanel from './FilterPanel';
 import ChatPanel from './ChatPanel';
 // import ExtraPanel from './ExtraPanel';
 import themes from '@/components/tablet/theme';
@@ -11,20 +11,18 @@ import { setActivePanel } from '@/store/redux/slices/uiSlice';
 
 // Replace these with actual types if available
 type QueryBuilderQuery = string;
-type Filters = Record<string, unknown>;
 
 type RightPanelProps = {
   queryBuilderQuery: QueryBuilderQuery;
   setQueryBuilderQuery: (query: QueryBuilderQuery) => void;
-  filters: Filters;
-  setFilters: (filters: Filters) => void;
+    filters: Record<string, unknown>;
+    setFilters: React.Dispatch<React.SetStateAction<Record<string, unknown>>>;
+  // Removed filters and setFilters as they are unused
 };
 
 const RightPanel: React.FC<RightPanelProps> = ({
   queryBuilderQuery,
   setQueryBuilderQuery,
-  filters,
-  setFilters,
 }) => {
   const dispatch = useDispatch();
   const { activePanel, panelWidth } = useSelector((state: RootState) => state.ui);
@@ -46,13 +44,14 @@ const RightPanel: React.FC<RightPanelProps> = ({
       >
         {activePanel === 'query' && (
           <QueryPanel
-            queryBuilderQuery={queryBuilderQuery} //
+            queryBuilderQuery={queryBuilderQuery}
             setQueryBuilderQuery={setQueryBuilderQuery}
             setActivePanel={handleSetActivePanel}
             theme={currentTheme}
           />
         )}
 
+        {/* Uncomment only if you use FilterPanel */}
         {/* {activePanel === 'filters' && (
           <FilterPanel filters={filters} setFilters={setFilters} />
         )} */}
@@ -65,16 +64,14 @@ const RightPanel: React.FC<RightPanelProps> = ({
           />
         )}
 
-        {/* 
-        If you plan to use the ExtraPanel in the future, make sure to uncomment this block and import ExtraPanel.
-        {activePanel === 'screener' && (
+        {/* Uncomment if using ExtraPanel */}
+        {/* {activePanel === 'screener' && (
           <ExtraPanel
             setActivePanel={handleSetActivePanel}
             theme={currentTheme}
             activePanel={activePanel}
           />
-        )}
-        */}
+        )} */}
       </div>
     </>
   );

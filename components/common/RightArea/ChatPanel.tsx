@@ -11,7 +11,7 @@ import { setLatestQuery } from '@/store/redux/slices/querySlice'; // ✅ Ensure 
 type ChatPanelProps = {
   
   setActivePanel: (panel: string | null) => void;
-  
+    activePanel: string; 
   theme: {
     name: string;
     bg: string;
