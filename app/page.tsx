@@ -29,7 +29,7 @@ export default function Page() {
 
 useEffect(() => {
   setTimeout(() => {
-  router.push(`/home/?query=${encodeURIComponent("High dividend telecom stocks")}`);
+  router.push(`/stocks/?query=${encodeURIComponent("High dividend telecom stocks")}`);
   }, 2000); // 
   setLoaderState(true);
 },[loaderState, router]);
