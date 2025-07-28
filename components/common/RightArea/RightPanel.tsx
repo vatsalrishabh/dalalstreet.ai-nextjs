@@ -9,7 +9,6 @@ import ChatPanel from './ChatPanel';
 import themes from '@/components/tablet/theme';
 import { setActivePanel } from '@/store/redux/slices/uiSlice';
 
-// Replace these with actual types if available
 type QueryBuilderQuery = Record<string, unknown>;
 type Filters = Record<string, unknown>;
 
@@ -33,10 +32,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   const currentTheme = themes['matte-black'];
 
-  // Optional: Debug logging during dev
-  // console.log('Theme surface:', currentTheme?.surface);
-  // console.log('Theme border:', currentTheme?.border);
-
   const handleSetActivePanel = (panel: string | null) => {
     dispatch(setActivePanel(panel));
   };
@@ -45,7 +40,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     <>
       <ResizableDivider />
       <div
-        className={`${currentTheme?.surface ?? ''} ${currentTheme?.border ?? ''} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
+        className={`${currentTheme.surface} ${currentTheme.border} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
         style={{ width: `${panelWidth}px` }}
       >
         {activePanel === 'query' && (
@@ -69,13 +64,16 @@ const RightPanel: React.FC<RightPanelProps> = ({
           />
         )}
 
+        {/* 
+        To enable this later, uncomment and import ExtraPanel at the top.
         {activePanel === 'screener' && (
-          // <ExtraPanel
-          //   setActivePanel={handleSetActivePanel}
-          //   theme={currentTheme}
-          //   activePanel={activePanel}
-          // />
+          <ExtraPanel
+            setActivePanel={handleSetActivePanel}
+            theme={currentTheme}
+            activePanel={activePanel}
+          />
         )}
+        */}
       </div>
     </>
   );
