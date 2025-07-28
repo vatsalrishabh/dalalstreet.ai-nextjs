@@ -10,7 +10,7 @@ type StockTableProps = {
  theme: { [key: string]: string };
   visibleColumnsList: { key: string; label: string }[];
   visibleColumns: Record<string, boolean>;
-  sortedStockData: StockData;
+  sortedStockData: StockData[];
   handleSort: (key: string) => void;
   getSortIcon: (key: string) => string | null;
   formatValue: (val: number) => string;

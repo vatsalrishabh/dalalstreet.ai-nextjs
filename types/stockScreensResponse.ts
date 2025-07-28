@@ -3,7 +3,7 @@ export interface StockItem {
   name: string;
   average_return_on_equity_3years: number;
   average_return_on_equity_5years: number;
-  bse_code: number;
+  bse_code: string;
   change_in_promoter_holding: number;
   current_price: number;
   current_ratio: number;
