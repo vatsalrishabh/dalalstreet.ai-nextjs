@@ -78,7 +78,7 @@ Price_to_Earning <= 25`);
 //     }
 //   };
 
-  const theme = themes[currentTheme];
+  const theme = themes;
 
   const stockData = [
     { stock: '20MICRONS', exchange: 'NSE', value: 259.40, change: 15.32, changePercent: 15.32, open: 228.00, high: 267.99, low: 225.50, volume: '1.2M', marketCap: '₹850Cr', peRatio: 12.5 },
@@ -153,8 +153,8 @@ Price_to_Earning <= 25`);
     if (!sortColumn) return stockData;
     
     return [...stockData].sort((a, b) => {
-      let aValue = a[sortColumn];
-      let bValue = b[sortColumn];
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
       
       // Handle numeric values
       if (typeof aValue === 'number' && typeof bValue === 'number') {
@@ -181,7 +181,7 @@ Price_to_Earning <= 25`);
 
   const handleMouseMove = (e) => {
     if (!isResizing) return;
-    const rect = document.body.getBoundingClientRect();
+    // const rect = document.body.getBoundingClientRect();
     const newWidth = window.innerWidth - e.clientX + 10; // Add small offset
     setPanelWidth(Math.max(300, Math.min(window.innerWidth * 0.6, newWidth))); // Max 60% of screen
   };
@@ -210,7 +210,7 @@ Price_to_Earning <= 25`);
 
   return (
     <div className={`h-screen ${theme.bg} ${theme.text} font-sans flex flex-col overflow-hidden`}>
-      {/* Header */}
+      {/* Header/ Navbar */}
       <div className={`flex items-center justify-between px-8 py-4 ${theme.border} border-b`}>
         <div className="flex items-center gap-8">
           <h1 className="text-xl font-medium tracking-tight">Stock Screener</h1>
@@ -270,8 +270,13 @@ Price_to_Earning <= 25`);
         </div>
       </div>
 
+        {/* Header/ Navbar ends */}
+
+
+
       <div className="flex">
         {/* Left Toolbar */}
+        
         {currentTab === 'explore' && (
           <div className="flex flex-col justify-center items-center py-8 gap-4 px-4 min-h-screen">
             <button 

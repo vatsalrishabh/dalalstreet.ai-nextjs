@@ -1,10 +1,16 @@
 import React from 'react';
 
+
+type StockData = {
+  [key: string]: string | number | null | undefined;
+  bse_code: string; // Or the actual expected keys and types
+};
+
 type StockTableProps = {
  theme: { [key: string]: string };
   visibleColumnsList: { key: string; label: string }[];
   visibleColumns: Record<string, boolean>;
-  sortedStockData: any[];
+  sortedStockData: StockData;
   handleSort: (key: string) => void;
   getSortIcon: (key: string) => string | null;
   formatValue: (val: number) => string;
@@ -18,12 +24,12 @@ const StockTable: React.FC<StockTableProps> = ({
   sortedStockData,
   handleSort,
   getSortIcon,
-  formatValue,
-  formatChange
+
 }) => {
 
 
   console.log(visibleColumnsList) // th : th
+  
 
   return (
     <div className={`${theme.surface} rounded-2xl overflow-hidden`}>
