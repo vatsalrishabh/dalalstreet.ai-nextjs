@@ -11,7 +11,8 @@ const Page = () => {
   const [activePanel] = useState<string | null>('screener');
 
   const [queryBuilderQuery, setQueryBuilderQuery] = useState<Record<string, unknown>>({});
-  const [filters, setFilters] = useState<Record<string, unknown>[]>([]);
+const [filters, setFilters] = useState<Record<string, unknown>>({});
+;
 
   const activeTheme = themes['matte-black'];
 
