@@ -5,15 +5,19 @@ import ResizableDivider from '@/components/common/RightArea/ResizableDivider';
 import QueryPanel from './QueryPanel';
 import FilterPanel from './FilterPanel';
 import ChatPanel from './ChatPanel';
-import ExtraPanel from './ExtraPanel';
+// import ExtraPanel from './ExtraPanel';
 import theme from '@/components/tablet/theme';
-import { setActivePanel  } from '@/store/redux/slices/uiSlice';
+import { setActivePanel } from '@/store/redux/slices/uiSlice';
+
+// Replace these with actual types if available
+type QueryBuilderQuery = Record<string, unknown>;
+type Filters = Record<string, unknown>;
 
 type RightPanelProps = {
-  queryBuilderQuery: any;
-  setQueryBuilderQuery: (query: any) => void;
-  filters: any;
-  setFilters: (filters: any) => void;
+  queryBuilderQuery: QueryBuilderQuery;
+  setQueryBuilderQuery: (query: QueryBuilderQuery) => void;
+  filters: Filters;
+  setFilters: (filters: Filters) => void;
 };
 
 const RightPanel: React.FC<RightPanelProps> = ({
@@ -48,24 +52,25 @@ const RightPanel: React.FC<RightPanelProps> = ({
             theme={currentTheme}
           />
         )}
+
         {activePanel === 'filters' && (
-          <FilterPanel
-            filters={filters}
-            setFilters={setFilters}
-          />
+          <FilterPanel filters={filters} setFilters={setFilters} />
         )}
+
         {activePanel === 'chat' && (
           <ChatPanel
-            activePanel={activePanel}
             setActivePanel={handleSetActivePanel}
             theme={currentTheme}
+            activePanel={activePanel}
           />
         )}
+
         {activePanel === 'screener' && (
-          <ExtraPanel
-            setActivePanel={handleSetActivePanel}
-            theme={currentTheme}
-          />
+          // <ExtraPanel
+          //   setActivePanel={handleSetActivePanel}
+          //   theme={currentTheme}
+          //   activePanel={activePanel}
+          // />
         )}
       </div>
     </>

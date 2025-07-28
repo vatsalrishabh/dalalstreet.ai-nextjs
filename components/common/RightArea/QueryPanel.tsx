@@ -21,15 +21,13 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
 }) => {
   const [lastQuery, setLastQuery] = useState<string | null>(null);
 
- useEffect(() => {
-  const latestQuery = localStorage.getItem("lastQuery");
-  if (latestQuery) {
-    setQueryBuilderQuery(latestQuery);
-    setLastQuery(latestQuery);
-    console.log(lastQuery)
-  }
-}, []);
-
+  useEffect(() => {
+    const latestQuery = localStorage.getItem("lastQuery");
+    if (latestQuery) {
+      setQueryBuilderQuery(latestQuery);
+      setLastQuery(latestQuery);
+    }
+  }, [setQueryBuilderQuery]); // include function in dependency array
 
   return (
     <div className="h-full flex flex-col">
@@ -42,6 +40,7 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
           <X className="w-5 h-5" />
         </button>
       </div>
+
       <div className="flex-1 p-6 space-y-6">
         <div>
           <label className="block text-sm font-medium mb-3">
@@ -51,12 +50,13 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
             value={queryBuilderQuery}
             onChange={(e) => {
               setQueryBuilderQuery(e.target.value);
-              localStorage.setItem("lastQuery", e.target.value); // optionally save on change
+              localStorage.setItem("lastQuery", e.target.value);
             }}
             className={`w-full h-48 p-4 ${theme.accent} ${theme.border} border rounded-xl text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all`}
             placeholder="Enter your query..."
           />
         </div>
+
         <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-xl font-medium transition-colors">
           Run Query
         </button>
