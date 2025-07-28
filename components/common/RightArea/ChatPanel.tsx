@@ -9,8 +9,9 @@ import { useDispatch } from 'react-redux';
 import { setLatestQuery } from '@/store/redux/slices/querySlice'; // ✅ Ensure this is correct
 
 type ChatPanelProps = {
-
+  
   setActivePanel: (panel: string | null) => void;
+  
   theme: {
     name: string;
     bg: string;

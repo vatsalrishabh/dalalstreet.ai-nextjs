@@ -10,7 +10,7 @@ const Page = () => {
   const [currentTab] = useState('explore');
   const [activePanel] = useState<string | null>('screener');
 
-  const [queryBuilderQuery, setQueryBuilderQuery] = useState<Record<string, unknown>>({});
+  const [queryBuilderQuery, setQueryBuilderQuery] = useState<string>("");
 const [filters, setFilters] = useState<Record<string, unknown>>({});
 ;
 

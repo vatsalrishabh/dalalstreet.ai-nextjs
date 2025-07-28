@@ -9,7 +9,8 @@ import ChatPanel from './ChatPanel';
 import themes from '@/components/tablet/theme';
 import { setActivePanel } from '@/store/redux/slices/uiSlice';
 
-type QueryBuilderQuery = Record<string, unknown>;
+// Replace these with actual types if available
+type QueryBuilderQuery = string;
 type Filters = Record<string, unknown>;
 
 type RightPanelProps = {
@@ -40,21 +41,21 @@ const RightPanel: React.FC<RightPanelProps> = ({
     <>
       <ResizableDivider />
       <div
-        className={`${currentTheme.surface} ${currentTheme.border} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
+        className={`${currentTheme?.surface ?? ''} ${currentTheme?.border ?? ''} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
         style={{ width: `${panelWidth}px` }}
       >
         {activePanel === 'query' && (
           <QueryPanel
-            queryBuilderQuery={queryBuilderQuery}
+            queryBuilderQuery={queryBuilderQuery} //
             setQueryBuilderQuery={setQueryBuilderQuery}
             setActivePanel={handleSetActivePanel}
             theme={currentTheme}
           />
         )}
 
-        {activePanel === 'filters' && (
+        {/* {activePanel === 'filters' && (
           <FilterPanel filters={filters} setFilters={setFilters} />
-        )}
+        )} */}
 
         {activePanel === 'chat' && (
           <ChatPanel
@@ -65,7 +66,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
         )}
 
         {/* 
-        To enable this later, uncomment and import ExtraPanel at the top.
+        If you plan to use the ExtraPanel in the future, make sure to uncomment this block and import ExtraPanel.
         {activePanel === 'screener' && (
           <ExtraPanel
             setActivePanel={handleSetActivePanel}
