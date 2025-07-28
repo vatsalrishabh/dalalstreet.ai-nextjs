@@ -2,10 +2,10 @@ import React from 'react';
 import { StockItem } from '@/types/stockScreensResponse';
 
 
-type StockData = {
-  [key: string]: string | number | null | undefined;
-  bse_code: string; // Or the actual expected keys and types
-};
+// type StockData = {
+//   [key: string]: string | number | null | undefined;
+//   bse_code: string; // Or the actual expected keys and types
+// };
 
 type StockTableProps = {
  theme: { [key: string]: string };
