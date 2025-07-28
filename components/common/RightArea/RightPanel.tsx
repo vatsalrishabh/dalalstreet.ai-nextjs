@@ -33,6 +33,10 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
   const currentTheme = themes['matte-black'];
 
+  // Optional: Debug logging during dev
+  // console.log('Theme surface:', currentTheme?.surface);
+  // console.log('Theme border:', currentTheme?.border);
+
   const handleSetActivePanel = (panel: string | null) => {
     dispatch(setActivePanel(panel));
   };
@@ -41,7 +45,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     <>
       <ResizableDivider />
       <div
-        className={`${currentTheme.surface} ${currentTheme.border} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
+        className={`${currentTheme?.surface ?? ''} ${currentTheme?.border ?? ''} border-l lg:h-[92vh] overflow-hidden flex-shrink-0`}
         style={{ width: `${panelWidth}px` }}
       >
         {activePanel === 'query' && (
