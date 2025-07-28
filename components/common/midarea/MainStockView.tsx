@@ -244,7 +244,7 @@ useEffect(() => {
             .filter(([ visible]) => visible)
             .map(([key]) => ({ key, label: key }))}
           visibleColumns={visibleColumns}
-         sortedStockData={allStocks?.slice(0, 50) || []} // replace with your actual data
+  sortedStockData={allStocks?.flat().slice(0, 50) || []}// replace with your actual data
           handleSort={() => {}} // your sorting handler
           getSortIcon={() => null} // your sort icon function
        formatValue={(val) => (typeof val === 'number' ? val.toFixed(2) : val ?? '--')}
