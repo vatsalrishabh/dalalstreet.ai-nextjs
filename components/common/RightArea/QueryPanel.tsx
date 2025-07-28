@@ -26,6 +26,7 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
   if (latestQuery) {
     setQueryBuilderQuery(latestQuery);
     setLastQuery(latestQuery);
+    console.log(lastQuery)
   }
 }, []);
 

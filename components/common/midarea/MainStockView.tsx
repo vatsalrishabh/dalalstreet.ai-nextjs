@@ -12,12 +12,12 @@ import SaveScreen from './SaveScreen';
 
 
 
-type Props = {
-  title?: string;
-  count?: number;
-  firebaseIdToken: string;
-  query: string;
-};
+// type Props = {
+//   title?: string;
+//   count?: number;
+//   firebaseIdToken: string;
+//   query: string;
+// };
 
 const MainStockView = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -102,32 +102,32 @@ useEffect(() => {
 }, [firebaseIdToken, query, dispatch]);
 
 
-const handleSaveScreen = async () => {
-    const title = prompt('Enter a title for this screen:');
-    if (!title) return;
+// const handleSaveScreen = async () => {
+//     const title = prompt('Enter a title for this screen:');
+//     if (!title) return;
 
-    const description = prompt('Enter a description (optional):') || '';
+//     const description = prompt('Enter a description (optional):') || '';
 
-    const selectedColumns = Object.entries(visibleColumns)
-      .filter(([_, isVisible]) => isVisible)
-      .map(([key]) => key);
+//     const selectedColumns = Object.entries(visibleColumns)
+//       .filter(([_, isVisible]) => isVisible)
+//       .map(([key]) => key);
 
-    try {
-      if(firebaseIdToken){
- await saveScreen(firebaseIdToken, {
-        title,
-        description,
-        screen_query: query,
-        columns: selectedColumns,
-      });
-      }
+//     try {
+//       if(firebaseIdToken){
+//  await saveScreen(firebaseIdToken, {
+//         title,
+//         description,
+//         screen_query: query,
+//         columns: selectedColumns,
+//       });
+//       }
      
-      toast.success('✅ Screen saved successfully!');
-    } catch (err) {
-      console.error(err);
-      toast.error('❌ Failed to save screen.');
-    }
-  };
+//       toast.success('✅ Screen saved successfully!');
+//     } catch (err) {
+//       console.error(err);
+//       toast.error('❌ Failed to save screen.');
+//     }
+//   };
 
 
   return (
