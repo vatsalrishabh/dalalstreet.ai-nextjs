@@ -26,8 +26,26 @@ export const getStockScreenResults = async (
   }
 };
 
+// Get saved column preferences
+export const getSavedColumnPreferences = async (
+  token: string
+): Promise<string[]> => {
+  try {
+    const res = await api.get('/api/v1/screen/get-preferred-columns', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-
+    console.log('✅ Column preferences fetched:', res.data);
+    return res.data?.preferred_columns || [];
+  } catch (err: any) {
+    console.error('❌ Error fetching column preferences:', err?.response?.data || err?.message || err);
+    
+    // Return empty array if no preferences saved yet
+    return [];
+  }
+};
 
 type UpdatePreferredColumnsPayload = {
   preferred_columns: string[];
@@ -42,8 +60,13 @@ export const updateSavedScreen = async (
       preferred_columns: preferredColumns,
     };
 
+    console.log('Sending payload:', payload); // Debug log
+    console.log('Base URL:', process.env.NEXT_PUBLIC_Base_URL); // Debug base URL
+    console.log('Token available:', !!token); // Debug token
+
+    // Use the correct API endpoint
     const res = await api.put(
-      '/api/v1/stocks/save-preferred-columns', // Make sure this endpoint is correct
+      '/api/v1/screen/save-preferred-columns', // Correct endpoint
       payload,
       {
         headers: {
@@ -59,6 +82,18 @@ export const updateSavedScreen = async (
       '❌ Error updating preferred columns:',
       err?.response?.data || err?.message || err
     );
+    
+    // More detailed error logging
+    if (err?.response) {
+      console.error('Response status:', err.response.status);
+      console.error('Response data:', err.response.data);
+      console.error('Response headers:', err.response.headers);
+    } else if (err?.request) {
+      console.error('Request was made but no response received:', err.request);
+    } else {
+      console.error('Error setting up request:', err.message);
+    }
+    
     throw err;
   }
 };

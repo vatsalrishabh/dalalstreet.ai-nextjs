@@ -21,8 +21,7 @@ const ChatInput = ({ onSend, disabled = false }: Props) => {
 
   
   useEffect(() => {
-    console.log('Latest Query from Redux:', latestQuery);
-    const query = searchParams.get('query');
+    const query = searchParams?.get('query');
 
     if (query && !hasAutoSent.current) {
       setInput(query);

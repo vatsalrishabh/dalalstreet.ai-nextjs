@@ -1,16 +1,26 @@
 // components/SessionHandler.tsx
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuth, onIdTokenChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { login, logout } from '@/store/redux/slices/authSlice';
+import { login, logout, rehydrate } from '@/store/redux/slices/authSlice';
 import { BackendUser } from '@/types/auth';
+import '@/firebase/config';
 
 const SessionHandler = () => {
   const dispatch = useDispatch();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+    // Rehydrate from localStorage on client side
+    dispatch(rehydrate());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const auth = getAuth();
 
     const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
@@ -38,7 +48,7 @@ const SessionHandler = () => {
     });
 
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, isClient]);
 
   return null;
 };

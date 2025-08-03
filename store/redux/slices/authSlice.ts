@@ -8,21 +8,11 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-// ✅ Fix: Prevent localStorage usage during SSR
-let userDetails: BackendUser | null = null;
-let token: string | null = null;
-
-if (typeof window !== "undefined") {
-  const storedUser = localStorage.getItem('userDetails');
-  const storedToken = localStorage.getItem('token');
-  userDetails = storedUser ? JSON.parse(storedUser) : null;
-  token = storedToken ?? null;
-}
-
+// ✅ Fix: Initialize with null values to prevent hydration issues
 const initialState: AuthState = {
-  user: userDetails,
-  token: token,
-  isAuthenticated: !!token,
+  user: null,
+  token: null,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -35,10 +25,10 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
 
       // ✅ Safe: runs only in browser
-      // if (typeof window !== "undefined") {
-      //   localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
-      //   localStorage.setItem('token', action.payload.token);
-      // }
+      if (typeof window !== "undefined") {
+        localStorage.setItem('userDetails', JSON.stringify(action.payload.user));
+        localStorage.setItem('token', action.payload.token);
+      }
     },
     logout(state) {
       state.user = null;
@@ -47,12 +37,29 @@ const authSlice = createSlice({
 
       // ✅ Safe: runs only in browser
       if (typeof window !== "undefined") {
-        localStorage.removeItem('userDetails');
-        localStorage.removeItem('token');
+        localStorage.clear();
+      }
+    },
+    // Add a new action to rehydrate from localStorage
+    rehydrate(state) {
+      if (typeof window !== "undefined") {
+        const storedUser = localStorage.getItem('userDetails');
+        const storedToken = localStorage.getItem('token');
+        
+        if (storedUser && storedToken) {
+          try {
+            state.user = JSON.parse(storedUser);
+            state.token = storedToken;
+            state.isAuthenticated = true;
+          } catch (error) {
+            console.error('Error parsing stored user data:', error);
+            localStorage.clear();
+          }
+        }
       }
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, rehydrate } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,12 +1,6 @@
 import React from 'react';
 import { StockItem } from '@/types/stockScreensResponse';
 
-
-// type StockData = {
-//   [key: string]: string | number | null | undefined;
-//   bse_code: string; // Or the actual expected keys and types
-// };
-
 type StockTableProps = {
  theme: { [key: string]: string };
   visibleColumnsList: { key: string; label: string }[];
@@ -18,23 +12,21 @@ type StockTableProps = {
   formatChange: (change: number, percent: number) => React.ReactNode;
 };
 
-const StockTable: React.FC<StockTableProps> = ({
+const StockTable: React.FC<StockTableProps> = React.memo(({
   theme,
   visibleColumnsList,
   visibleColumns,
   sortedStockData,
   handleSort,
   getSortIcon,
-
 }) => {
-
 
   console.log(visibleColumnsList) // th : th
   
 
   return (
     <div className={`${theme.surface} rounded-2xl overflow-hidden`}>
-      <div className="lg:h-[70vh] overflow-auto">
+      <div className="h-[45vh] sm:h-[50vh] lg:h-[55vh] overflow-auto">
         <table className="w-full min-w-max">
           <thead className="sticky top-0 ">
             <tr className={`${theme.header}`}>
@@ -56,7 +48,7 @@ const StockTable: React.FC<StockTableProps> = ({
           </thead>
         <tbody>
   {sortedStockData.map((stock, index) => (
-    <tr key={`${stock.bse_code}-${index}`} className={`transition-colors hover:${theme.surfaceHover} group`}>
+    <tr key={`${stock.ticker || stock.name || index}-${index}`} className={`transition-colors hover:${theme.surfaceHover} group`}>
       {visibleColumnsList.map(({ key }) => {
         if (!visibleColumns[key]) return null;
         return (
@@ -73,6 +65,8 @@ const StockTable: React.FC<StockTableProps> = ({
       </div>
     </div>
   );
-};
+});
+
+StockTable.displayName = 'StockTable';
 
 export default StockTable;

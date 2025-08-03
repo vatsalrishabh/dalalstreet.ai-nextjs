@@ -28,7 +28,7 @@ const QueryPanel: React.FC<QueryPanelProps> = ({
       setQueryBuilderQuery(latestQuery);
       setLastQuery(latestQuery);
     }
-  }, [setQueryBuilderQuery]); // include function in dependency array
+  }, [setQueryBuilderQuery, lastQuery]); // include function and lastQuery in dependency array
 
   return (
     <div className="h-full flex flex-col">

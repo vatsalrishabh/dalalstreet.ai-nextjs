@@ -8,37 +8,37 @@ import DaisyNavbar from '@/components/common/Navbar/DaisyNavbar';
 
 const Page = () => {
   const [currentTab] = useState('explore');
-  const [activePanel] = useState<string | null>('screener');
-
+  // Remove hardcoded activePanel - let Redux manage it
   const [queryBuilderQuery, setQueryBuilderQuery] = useState<string>("");
-const [filters, setFilters] = useState<Record<string, unknown>>({});
-;
+  const [filters, setFilters] = useState<Record<string, unknown>>({});
 
   const activeTheme = themes['matte-black'];
 
   return (
     <>
-      <div className='h-[8vh]'>
+      {/* Navbar - Fixed height on all screens */}
+      <div className='h-[8vh] min-h-[60px]'>
         <DaisyNavbar />
       </div>
 
-      <div className='lg:flex sm:block lg:h-[92vh] w-full'>
-        {/* Sidebar */}
-        <div className='lg:w-[4%]'>
+      {/* Main Content - Responsive layout */}
+      <div className='flex flex-col lg:flex-row h-[92vh] w-full relative'>
+        {/* Sidebar - Hidden on mobile, visible on larger screens */}
+        <div className='hidden lg:block lg:w-[4%] min-w-[60px]'>
           <SidebarNav
             theme={activeTheme}
             currentTab={currentTab}
-            activePanel={activePanel || ''}
+            activePanel=""
           />
         </div>
 
-        {/* Main Table */}
-        <div className='w-[70%] bg-black'>
+        {/* Main Table - Full width on mobile, 70% on desktop */}
+        <div className='w-full lg:w-[70%] bg-black flex-1 min-h-0'>
           <MainStockView />
         </div>
 
-        {/* Right Panel */}
-        <div className='w-[26%] bg-black'>
+        {/* Right Panel - Responsive overlay/panel */}
+        <div className='hidden lg:block lg:w-[26%] min-w-[300px] bg-black'>
           <RightPanel
             queryBuilderQuery={queryBuilderQuery}
             setQueryBuilderQuery={setQueryBuilderQuery}
@@ -46,6 +46,25 @@ const [filters, setFilters] = useState<Record<string, unknown>>({});
             setFilters={setFilters}
           />
         </div>
+      </div>
+
+      {/* Mobile Bottom Navigation - Always visible on mobile */}
+      <div className='lg:hidden'>
+        <SidebarNav
+          theme={activeTheme}
+          currentTab={currentTab}
+          activePanel=""
+        />
+      </div>
+
+      {/* Mobile/Tablet Right Panel Overlay */}
+      <div className='lg:hidden'>
+        <RightPanel
+          queryBuilderQuery={queryBuilderQuery}
+          setQueryBuilderQuery={setQueryBuilderQuery}
+          filters={filters}
+          setFilters={setFilters}
+        />
       </div>
     </>
   );
